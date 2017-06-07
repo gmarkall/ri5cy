@@ -1,6 +1,6 @@
 // Top level wrapper for RI5CY
 
-// Copyright (C) 2017 Embecosm <www.embecosm.com>
+// Copyright (C) 2017 Embecosm Limited <www.embecosm.com>
 
 // Contributor: Jeremy Bennett <jeremy.bennett@embecosm.com>
 
