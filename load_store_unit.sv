@@ -465,6 +465,7 @@ module riscv_load_store_unit
   assign busy_o = (CS == WAIT_RVALID) || (CS == WAIT_RVALID_EX_STALL) || (CS == IDLE_EX_STALL) || (data_req_o == 1'b1);
 
 
+`ifndef verilator
   //////////////////////////////////////////////////////////////////////////////
   // Assertions
   //////////////////////////////////////////////////////////////////////////////
@@ -484,5 +485,6 @@ module riscv_load_store_unit
 
   // assert that the address does not contain X when request is sent
   assert property ( @(posedge clk) (data_req_o) |-> (!$isunknown(data_addr_o)) );
+`endif
 
 endmodule

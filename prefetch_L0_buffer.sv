@@ -561,6 +561,7 @@ module riscv_prefetch_L0_buffer
   assign busy_o = busy_L0;
 
 
+`ifndef verilator
   //----------------------------------------------------------------------------
   // Assertions
   //----------------------------------------------------------------------------
@@ -574,6 +575,7 @@ module riscv_prefetch_L0_buffer
     @(posedge clk) (next_is_crossword) |-> (~is_crossword) ) else $warning("Cannot have two crossword accesses back-to-back");
   assert property (
     @(posedge clk) (is_crossword) |-> (~next_is_crossword) ) else $warning("Cannot have two crossword accesses back-to-back");
+`endif
 
 endmodule // prefetch_L0_buffer
 

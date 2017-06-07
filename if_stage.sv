@@ -374,6 +374,7 @@ module riscv_if_stage
   assign if_ready_o = valid & id_ready_i;
   assign if_valid_o = (~halt_if_i) & if_ready_o;
 
+`ifndef verilator
   //----------------------------------------------------------------------------
   // Assertions
   //----------------------------------------------------------------------------
@@ -387,5 +388,6 @@ module riscv_if_stage
   assert property (
     @(posedge clk) (req_i) |-> (~fetch_addr_n[0]) )
     else $warning("There was a request while the fetch_addr_n LSB is set");
+`endif
 
 endmodule

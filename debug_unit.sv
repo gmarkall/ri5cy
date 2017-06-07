@@ -517,6 +517,7 @@ module riscv_debug_unit
 
   assign settings_o      = settings_q;
 
+`ifndef verilator
   //----------------------------------------------------------------------------
   // Assertions
   //----------------------------------------------------------------------------
@@ -532,5 +533,6 @@ module riscv_debug_unit
   // check that all accesses are word-aligned
   assert property (
     @(posedge clk) (debug_req_i) |-> (debug_addr_i[1:0] == 2'b00) );
+`endif //  `ifndef verilator
 
 endmodule // debug_unit

@@ -102,10 +102,18 @@ module riscv_register_file
 
     end
 
+`ifndef verilator
     // R0 is nil
     assign rf_reg[0] = '0;
+`endif
 
   endgenerate
+
+`ifdef verilator
+   // R0 is nil
+   always_ff @(posedge clk, negedge rst_n)
+     rf_reg[0] <= '0;
+`endif
 
   assign rdata_a_o = rf_reg[raddr_a_i];
   assign rdata_b_o = rf_reg[raddr_b_i];

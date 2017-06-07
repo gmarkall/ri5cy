@@ -252,6 +252,7 @@ module riscv_fetch_fifo
     end
   end
 
+`ifndef verilator
   //----------------------------------------------------------------------------
   // Assertions
   //----------------------------------------------------------------------------
@@ -259,6 +260,7 @@ module riscv_fetch_fifo
   // check for FIFO overflows
   assert property (
     @(posedge clk) (in_valid_i) |-> ((valid_Q[DEPTH-1] == 1'b0) || (clear_i == 1'b1) || (in_replace2_i == 1'b1)) );
+`endif
 
 endmodule
 

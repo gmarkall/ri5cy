@@ -123,6 +123,7 @@ module riscv_hwloop_regs
     end
   end
 
+`ifndef verilator
   //----------------------------------------------------------------------------
   // Assertions
   //----------------------------------------------------------------------------
@@ -130,5 +131,6 @@ module riscv_hwloop_regs
   // do not decrement more than one counter at once
   assert property (
     @(posedge clk) (valid_i) |-> ($countones(hwlp_dec_cnt_i) <= 1) );
+`endif
 
 endmodule

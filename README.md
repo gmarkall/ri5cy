@@ -24,6 +24,12 @@ It is written using LaTeX and can be generated as follows
 
     make all
 
+## Verilator model
+
+The Verilator model can be built at the top level using
+
+    make all
+
 ## Licensing
 
 The upstream design is all licensed under the SolderPad License v 0.51, see

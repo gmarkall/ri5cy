@@ -282,6 +282,7 @@ module riscv_mult
   assign multicycle_o = mulh_save;
   assign ready_o      = mulh_ready;
 
+`ifndef verilator
   //----------------------------------------------------------------------------
   // Assertions
   //----------------------------------------------------------------------------
@@ -303,4 +304,6 @@ module riscv_mult
     @(posedge clk) ((mulh_CS == FINISH) && (operator_i == MUL_H) && (short_signed_i == 2'b00))
     |->
     (result_o == (({32'b0, op_a_i} * {32'b0, op_b_i}) >> 32) ) );
+`endif
+
 endmodule

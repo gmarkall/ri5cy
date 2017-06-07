@@ -1,3 +1,3 @@
 *.swp
-
-
+# Verilator object directory
+obj_dir/

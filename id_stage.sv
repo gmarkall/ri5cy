@@ -1189,6 +1189,7 @@ module riscv_id_stage
   assign id_valid_o = (~halt_id) & id_ready_o;
 
 
+`ifndef verilator
   //----------------------------------------------------------------------------
   // Assertions
   //----------------------------------------------------------------------------
@@ -1200,5 +1201,6 @@ module riscv_id_stage
   // the instruction delivered to the ID stage should always be valid
   assert property (
     @(posedge clk) (instr_valid_i & (~illegal_c_insn_i)) |-> (!$isunknown(instr_rdata_i)) ) else $display("Instruction is valid, but has at least one X");
+`endif
 
 endmodule
