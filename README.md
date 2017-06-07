@@ -30,6 +30,10 @@ The Verilator model can be built at the top level using
 
     make all
 
+The RI5CY code uses some quite advanced System Verilog, so you will need a
+very up to date Verilator. We succeeded with development version 3.905, but
+found version 3.900 crashed.
+
 ## Licensing
 
 The upstream design is all licensed under the SolderPad License v 0.51, see
