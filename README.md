@@ -24,3 +24,14 @@ It is written using LaTeX and can be generated as follows
 
     make all
 
+## Licensing
+
+The upstream design is all licensed under the SolderPad License v 0.51, see
+the file LICENSE.solderpad.
+
+The modifications by Embecosm to support Verilator modeling and implement a
+GDB server are licensed under the GNU General Public License 3.0, see the file
+LICENSE.GPL3.
+
+The headers for source files should indicate which license applies. If no
+license is specified, then the solderPad license should be assumed.
