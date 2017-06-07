@@ -1,0 +1,12 @@
+# Ignore build artifacts
+auto/
+datasheet.aux
+datasheet.log
+datasheet.pdf
+datasheet.toc
+figures/events.eps
+figures/events.pdf
+figures/pipeline.eps
+figures/pipeline.pdf
+figures/ri5cy_overview.eps
+figures/ri5cy_overview.pdf
