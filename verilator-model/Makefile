@@ -20,9 +20,7 @@
 
 VERILATOR = verilator
 VDIR = obj_dir
-#VSHAREDIR ?= /usr/share/verilator
-VSHAREDIR ?= /opt/verilator-HEAD/share/verilator
-CPPFLAGS = -I$(VDIR) -I$(VSHAREDIR)/include -I$(VSHAREDIR)/include/vltstd
+CPPFLAGS = -I$(VDIR) `pkg-config --cflags verilator`
 CXXFLAGS = -Wall -Werror -std=c++11
 CXX = g++
 LD = g++
