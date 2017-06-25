@@ -21,11 +21,11 @@
 // This maps the dp_ram module of pulpino to the instruction and data ports of
 // the RI5CY processor core.
 
-// By default we allow for 64KiB RAM.
+// 4MB of RAM, matching the PicoRV32 implementation.
 
 module ram
     #(
-    parameter ADDR_WIDTH = 16
+    parameter ADDR_WIDTH = 22
   )(
     // Clock
     input  logic                   clk,
