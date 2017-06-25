@@ -103,3 +103,10 @@ sc_time_stamp ()
   return cpuTime;
 
 }
+
+
+// Local Variables:
+// mode: C++
+// c-file-style: "gnu"
+// show-trailing-whitespace: t
+// End:

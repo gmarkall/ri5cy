@@ -42,8 +42,6 @@ module top
  input  logic [31:0] debug_wdata_i,
  output logic [31:0] debug_rdata_o,
  output logic        debug_halted_o,
- input  logic        debug_halt_i,
- input  logic        debug_resume_i,
 
  // CPU Control Signals
  input  logic        fetch_enable_i,
@@ -107,8 +105,8 @@ module top
       .debug_wdata_i       ( debug_wdata_i  ),
       .debug_rdata_o       ( debug_rdata_o  ),
       .debug_halted_o      ( debug_halted_o ),
-      .debug_halt_i        ( debug_halt_i   ),
-      .debug_resume_i      ( debug_resume_i ),
+      .debug_halt_i        ( 1'b0           ),	// Not used in single core
+      .debug_resume_i      ( 1'b0           ),	// Not used in single core
 
       .fetch_enable_i      ( fetch_enable_i ),
       .core_busy_o         ( core_busy_o    ),
