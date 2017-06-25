@@ -10,7 +10,7 @@
 
 module dp_ram
   #(
-    parameter ADDR_WIDTH = 8
+    parameter ADDR_WIDTH = 24
   )(
     // Clock and Reset
     input  logic clk,
@@ -33,6 +33,7 @@ module dp_ram
   localparam words = 2**ADDR_WIDTH;
 
   logic [3:0][7:0] mem[words];
+  initial $readmemb("test.txt", mem);
 
   always @(posedge clk)
   begin
@@ -64,5 +65,31 @@ module dp_ram
 
     rdata_b_o <= mem[addr_b_i];
   end
+
+  function [31:0] readWord;
+    /* verilator public */
+    input integer word_addr;
+    readWord = mem[word_addr];
+  endfunction
+
+  function [7:0] readByte;
+    /* verilator public */
+    input integer byte_addr;
+    readByte = mem[byte_addr >> 2][byte_addr & 3];
+  endfunction
+
+  task writeWord;
+    /* verilator public */
+    input integer word_addr;
+    input integer val;
+    mem[word_addr] = val;
+  endtask
+
+  task writeByte;
+    /* verilator public */
+    input integer byte_addr;
+    input [7:0] val;
+    mem[byte_addr >> 2][byte_addr & 3] = val;
+  endtask
 
 endmodule

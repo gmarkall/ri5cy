@@ -17,9 +17,13 @@
 // You should have received a copy of the GNU General Public License along with
 // this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include <iostream>
 #include "verilated.h"
 #include "verilated_vcd_c.h"
 #include "Vtop.h"
+#include "Vtop_top.h"
+#include "Vtop_ram__A10.h"
+#include "Vtop_dp_ram__A10.h"
 
 
 // Count of clock ticks
@@ -65,6 +69,28 @@ main (int    argc,
       cpuTime += 5;
       tfp->dump (cpuTime);
     }
+
+  // Read from memory
+
+  // Word read first
+  for (size_t i = 0; i < 4; i++)
+    {
+      uint32_t res = cpu->top->ram_i->dp_ram_i->readWord (i);
+      std::cout << std::hex << res << " ";
+    }
+
+  std::cout << std::endl;
+
+  // Try byte read
+  for (size_t i = 0; i < 16; i++)
+    {
+      uint32_t res = cpu->top->ram_i->dp_ram_i->readByte (i);
+      std::cout << std::hex << res << " ";
+    }
+
+  // Write a valid instruction to memory.
+  cpu->top->ram_i->dp_ram_i->writeWord (0x20, 0x00000593);
+  cpu->top->ram_i->dp_ram_i->writeWord (0x80, 0x00000593);
 
   // Do some ordinary clocked logic.
 
