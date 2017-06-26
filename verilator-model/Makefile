@@ -18,6 +18,7 @@
 
 # Tools
 
+# PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:/opt/verilator-HEAD/share/pkgconfig"
 VERILATOR = verilator
 VDIR = obj_dir
 CPPFLAGS = -I$(VDIR) `pkg-config --cflags verilator`

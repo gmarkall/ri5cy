@@ -45,8 +45,6 @@ main (int    argc,
 
   cpu->irq_i          = 0;
   cpu->debug_req_i    = 0;
-  cpu->debug_halt_i   = 0;
-  cpu->debug_resume_i = 0;
   cpu->fetch_enable_i = 1;
 
   // Cycle through reset
