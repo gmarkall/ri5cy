@@ -75,8 +75,12 @@ bool stepSingle (Vtop *mCpu)
     {
       mCpu->clk_i = 0;
       mCpu->eval ();
+      cpuTime += 5;
+      tfp->dump (cpuTime);
       mCpu->clk_i = 1;
       mCpu->eval ();
+      cpuTime += 5;
+      tfp->dump (cpuTime);
       mCycleCnt++;
       std::cout << "DBG_IE read cycle count " << mCycleCnt << std::endl;
     }
@@ -98,8 +102,12 @@ bool stepSingle (Vtop *mCpu)
     {
       mCpu->clk_i = 0;
       mCpu->eval ();
+      cpuTime += 5;
+      tfp->dump (cpuTime);
       mCpu->clk_i = 1;
       mCpu->eval ();
+      cpuTime += 5;
+      tfp->dump (cpuTime);
       mCycleCnt++;
       std::cout << "2 cycle count " << mCycleCnt << std::endl;
     }
@@ -116,8 +124,12 @@ bool stepSingle (Vtop *mCpu)
     {
       mCpu->clk_i = 0;
       mCpu->eval ();
+      cpuTime += 5;
+      tfp->dump (cpuTime);
       mCpu->clk_i = 1;
       mCpu->eval ();
+      cpuTime += 5;
+      tfp->dump (cpuTime);
       mCycleCnt++;
       std::cout << "3 cycle count " << mCycleCnt << std::endl;
       std::cout << "DBG_HIT reg " << std::hex << mCpu->debug_rdata_o << std::dec << std::endl;
@@ -137,8 +149,12 @@ bool stepSingle (Vtop *mCpu)
     {
       mCpu->clk_i = 0;
       mCpu->eval ();
+      cpuTime += 5;
+      tfp->dump (cpuTime);
       mCpu->clk_i = 1;
       mCpu->eval ();
+      cpuTime += 5;
+      tfp->dump (cpuTime);
       mCycleCnt++;
       std::cout << "db_hit clear cycle count " << mCycleCnt << std::endl;
     }
