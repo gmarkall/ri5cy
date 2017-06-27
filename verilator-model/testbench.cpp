@@ -90,6 +90,11 @@ void debugAccess(uint32_t addr, uint32_t& val, bool write_enable)
       mCycleCnt++;
     }
   while (cpu->debug_gnt_o == 0);
+
+  if (!write_enable)
+  {
+    val = cpu->debug_rdata_o;
+  }
 }
 
 uint32_t debugRead(uint32_t addr)
@@ -104,105 +109,23 @@ void debugWrite(uint32_t addr, uint32_t val)
   debugAccess(addr, val, true);
 }
 
-bool stepSingle (Vtop *mCpu)
+void stepSingle (Vtop *mCpu)
 {
-// uint32_t pc;
+  // Read DBG_IE to see if it is enabled
+  std::cout << "DBG_IE is " << std::hex << debugRead(DBG_IE) << std::dec << std::endl;
 
-  mCpu->debug_req_i   = 1;
-  mCpu->debug_addr_i  = DBG_IE;
-  mCpu->debug_we_i    = 0;
+  // Write HALT + SSTE into the debug register
+  debugWrite(DBG_CTRL, DBG_CTRL_SSTE);
 
-  // Write has succeeded when we get the grant signal asserted.
-  do
-    {
-      mCpu->clk_i = 0;
-      mCpu->eval ();
-      cpuTime += 5;
-      tfp->dump (cpuTime);
-      mCpu->clk_i = 1;
-      mCpu->eval ();
-      cpuTime += 5;
-      tfp->dump (cpuTime);
-      mCycleCnt++;
-      std::cout << "DBG_IE read cycle count " << mCycleCnt << std::endl;
-    }
-  while (mCpu->debug_gnt_o == 0);
-
-  std::cout << "DBG_IE is " << std::hex << mCpu->debug_rdata_o << std::dec << std::endl;
-
- mCpu->rstn_i        = 1;
-
- // Write HALT + SSTE into the debug register
-
-  mCpu->debug_req_i   = 1;
-  mCpu->debug_addr_i  = DBG_CTRL;
-  mCpu->debug_we_i    = 1;
-  mCpu->debug_wdata_i = DBG_CTRL_SSTE; // & DBG_CTRL_HALT;
-
-  // Write has succeeded when we get the grant signal asserted.
-  do
-    {
-      mCpu->clk_i = 0;
-      mCpu->eval ();
-      cpuTime += 5;
-      tfp->dump (cpuTime);
-      mCpu->clk_i = 1;
-      mCpu->eval ();
-      cpuTime += 5;
-      tfp->dump (cpuTime);
-      mCycleCnt++;
-      std::cout << "2 cycle count " << mCycleCnt << std::endl;
-    }
-  while (mCpu->debug_gnt_o == 0);
-
-// Read debug hit
-
-  mCpu->debug_req_i   = 1;
-  mCpu->debug_addr_i  = DBG_HIT;
-  mCpu->debug_we_i    = 0;
-
-  // Write has succeeded when we get the grant signal asserted.
-  do
-    {
-      mCpu->clk_i = 0;
-      mCpu->eval ();
-      cpuTime += 5;
-      tfp->dump (cpuTime);
-      mCpu->clk_i = 1;
-      mCpu->eval ();
-      cpuTime += 5;
-      tfp->dump (cpuTime);
-      mCycleCnt++;
-      std::cout << "3 cycle count " << mCycleCnt << std::endl;
+  // Keep reading the DBG_HIT register until it is SSTH
+  uint32_t dbg_hit;
+  do {
+      dbg_hit = debugRead(DBG_HIT);
       std::cout << "DBG_HIT reg " << std::hex << mCpu->debug_rdata_o << std::dec << std::endl;
-    }
-  while (mCpu->debug_gnt_o == 0 && !(mCpu->debug_rdata_o & 1));
+  } while (!(dbg_hit & 1));
 
-
-  // Clearing debug hit
-
-  mCpu->debug_req_i   = 1;
-  mCpu->debug_addr_i  = DBG_HIT;
-  mCpu->debug_we_i    = 1;
-  mCpu->debug_wdata_i = 0;
-
-  // Write has succeeded when we get the grant signal asserted.
-  do
-    {
-      mCpu->clk_i = 0;
-      mCpu->eval ();
-      cpuTime += 5;
-      tfp->dump (cpuTime);
-      mCpu->clk_i = 1;
-      mCpu->eval ();
-      cpuTime += 5;
-      tfp->dump (cpuTime);
-      mCycleCnt++;
-      std::cout << "db_hit clear cycle count " << mCycleCnt << std::endl;
-    }
-  while (mCpu->debug_gnt_o == 0);
-
-  return true;
+  // Clear DBG_HIT
+  debugWrite(DBG_HIT, 0);
 }
 
 
@@ -301,7 +224,7 @@ main (int    argc,
 
   // Do some ordinary clocked logic.
 
-  // do this like we are single stepping in GDB to try to get the illegal instruction
+  cpu->rstn_i = 1;
 
   if (USE_DEBUGGER)
   {
@@ -310,7 +233,6 @@ main (int    argc,
     }
   } else {
 
-    cpu->rstn_i = 1;
 
     for (int i = 0; i < 100; i++)
       {
