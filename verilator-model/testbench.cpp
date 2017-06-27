@@ -61,6 +61,7 @@ static vluint64_t  cpuTime = 0;
 
 static uint64_t mCycleCnt = 0;
 
+VerilatedVcdC * tfp;
 
 bool stepSingle (Vtop *mCpu)
 {
@@ -170,7 +171,6 @@ main (int    argc,
       char * argv[])
 {
   Vtop * cpu = new Vtop;
-  VerilatedVcdC * tfp;
 
   // Open VCD
 
