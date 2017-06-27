@@ -31,37 +31,78 @@
 using std::cerr;
 using std::endl;
 
+bool USE_DEBUGGER = true;
 
 // Count of clock ticks
 
 static vluint64_t  cpuTime = 0;
 
-  // Debug registers
+// Debug registers
 
-  const uint16_t DBG_CTRL    = 0x0000;  //!< Debug control
-  const uint16_t DBG_HIT     = 0x0004;  //!< Debug hit
-  const uint16_t DBG_IE      = 0x0008;  //!< Debug interrupt enable
-  const uint16_t DBG_CAUSE   = 0x000c;  //!< Debug cause (why entered debug)
-  const uint16_t DBG_GPR0    = 0x0400;  //!< General purpose register 0
-  const uint16_t DBG_GPR31   = 0x047c;  //!< General purpose register 41
-  const uint16_t DBG_NPC     = 0x2000;  //!< Next PC
-  const uint16_t DBG_PPC     = 0x2004;  //!< Prev PC
+const uint16_t DBG_CTRL    = 0x0000;  //!< Debug control
+const uint16_t DBG_HIT     = 0x0004;  //!< Debug hit
+const uint16_t DBG_IE      = 0x0008;  //!< Debug interrupt enable
+const uint16_t DBG_CAUSE   = 0x000c;  //!< Debug cause (why entered debug)
+const uint16_t DBG_GPR0    = 0x0400;  //!< General purpose register 0
+const uint16_t DBG_GPR31   = 0x047c;  //!< General purpose register 41
+const uint16_t DBG_NPC     = 0x2000;  //!< Next PC
+const uint16_t DBG_PPC     = 0x2004;  //!< Prev PC
 
-  // Debug register flags
+// Debug register flags
 
-  // FIXME: Changed to uint32_t to get to compile - constants too large. Check
-  // the constants are correct.
-  const uint32_t DBG_CTRL_HALT = 0x00010000;    //!< Halt core
-  const uint32_t DBG_CTRL_SSTE = 0x00000001;    //!< Single step core
+// FIXME: Changed to uint32_t to get to compile - constants too large. Check
+// the constants are correct.
+const uint32_t DBG_CTRL_HALT = 0x00010000;    //!< Halt core
+const uint32_t DBG_CTRL_SSTE = 0x00000001;    //!< Single step core
 
-  // GDB register numbers
+// GDB register numbers
 
-  const int REG_R0  = 0;                //!< GDB R0 regnum
-  const int REG_R31 = 31;               //!< GDB R31 regnum
+const int REG_R0  = 0;                //!< GDB R0 regnum
+const int REG_R31 = 31;               //!< GDB R31 regnum
 
 static uint64_t mCycleCnt = 0;
 
+Vtop *cpu;
 VerilatedVcdC * tfp;
+
+void debugAccess(uint32_t addr, uint32_t& val, bool write_enable)
+{
+  cpu->debug_req_i   = 1;
+  cpu->debug_addr_i  = addr;
+  cpu->debug_we_i    = write_enable ? 1 : 0;
+
+  if (write_enable)
+  {
+    cpu->debug_wdata_i = val;
+  }
+
+  // Write has succeeded when we get the grant signal asserted.
+  do
+    {
+      cpu->clk_i = 0;
+      cpu->eval ();
+      cpuTime += 5;
+      tfp->dump (cpuTime);
+      cpu->clk_i = 1;
+      cpu->eval ();
+      cpuTime += 5;
+      tfp->dump (cpuTime);
+      mCycleCnt++;
+    }
+  while (cpu->debug_gnt_o == 0);
+}
+
+uint32_t debugRead(uint32_t addr)
+{
+  uint32_t val;
+  debugAccess(addr, val, false);
+  return val;
+}
+
+void debugWrite(uint32_t addr, uint32_t val)
+{
+  debugAccess(addr, val, true);
+}
 
 bool stepSingle (Vtop *mCpu)
 {
@@ -170,7 +211,7 @@ int
 main (int    argc,
       char * argv[])
 {
-  Vtop * cpu = new Vtop;
+  cpu = new Vtop;
 
   // Open VCD
 
@@ -262,33 +303,29 @@ main (int    argc,
 
   // do this like we are single stepping in GDB to try to get the illegal instruction
 
-  for (int j=0; j<5; j++) {
-    stepSingle (cpu);
+  if (USE_DEBUGGER)
+  {
+    for (int j=0; j<5; j++) {
+      stepSingle (cpu);
+    }
+  } else {
+
+    cpu->rstn_i = 1;
+
+    for (int i = 0; i < 100; i++)
+      {
+        cpu->clk_i = 0;
+        cpu->eval ();
+        cpuTime += 5;
+        tfp->dump (cpuTime);
+
+        cpu->clk_i = 1;
+        cpu->eval ();
+        cpuTime += 5;
+        tfp->dump (cpuTime);
+      }
   }
 
-
-
-
-
-
-
-
-/*
-  cpu->rstn_i = 1;
-
-  for (int i = 0; i < 100; i++)
-    {
-      cpu->clk_i = 0;
-      cpu->eval ();
-      cpuTime += 5;
-      tfp->dump (cpuTime);
-
-      cpu->clk_i = 1;
-      cpu->eval ();
-      cpuTime += 5;
-      tfp->dump (cpuTime);
-    }
-*/
   // Close VCD
 
   tfp->close ();
