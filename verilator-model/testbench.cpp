@@ -76,7 +76,7 @@ void debugAccess(uint32_t addr, uint32_t& val, bool write_enable)
     cpu->debug_wdata_i = val;
   }
 
-  // Write has succeeded when we get the grant signal asserted.
+  // Access has succeeded when we get the grant signal asserted.
   do
     {
       cpu->clk_i = 0;
@@ -128,44 +128,8 @@ void stepSingle (Vtop *mCpu)
   debugWrite(DBG_HIT, 0);
 }
 
-
-
-int
-main (int    argc,
-      char * argv[])
+void loadProgram()
 {
-  cpu = new Vtop;
-
-  // Open VCD
-
-  Verilated::traceEverOn (true);
-  tfp = new VerilatedVcdC;
-  cpu->trace (tfp, 99);
-  tfp->open ("model.vcd");
-
-  // Fix some signals for now.
-
-  //cpu->irq_i          = 0;
-  cpu->debug_req_i    = 0;
-  cpu->fetch_enable_i = 1;
-
-  // Cycle through reset
-
-  cpu->rstn_i = 0;
-
-  for (int i = 0; i < 100; i++)
-    {
-      cpu->clk_i = 0;
-      cpu->eval ();
-      cpuTime += 5;
-      tfp->dump (cpuTime);
-
-      cpu->clk_i = 1;
-      cpu->eval ();
-      cpuTime += 5;
-      tfp->dump (cpuTime);
-    }
-
   // Write some program code into memory:
   //
   // ; Store a word to memory first:
@@ -221,6 +185,46 @@ main (int    argc,
   cpu->top->ram_i->dp_ram_i->writeByte (0x9d, 0x00);
   cpu->top->ram_i->dp_ram_i->writeByte (0x9e, 0x00);
   cpu->top->ram_i->dp_ram_i->writeByte (0x9f, 0x00);
+}
+
+int
+main (int    argc,
+      char * argv[])
+{
+  cpu = new Vtop;
+
+  // Open VCD
+
+  Verilated::traceEverOn (true);
+  tfp = new VerilatedVcdC;
+  cpu->trace (tfp, 99);
+  tfp->open ("model.vcd");
+
+  // Fix some signals for now.
+
+  //cpu->irq_i          = 0;
+  cpu->debug_req_i    = 0;
+  cpu->fetch_enable_i = 1;
+
+  // Cycle through reset
+
+  cpu->rstn_i = 0;
+
+  for (int i = 0; i < 100; i++)
+    {
+      cpu->clk_i = 0;
+      cpu->eval ();
+      cpuTime += 5;
+      tfp->dump (cpuTime);
+
+      cpu->clk_i = 1;
+      cpu->eval ();
+      cpuTime += 5;
+      tfp->dump (cpuTime);
+    }
+
+  loadProgram();
+
 
   // Do some ordinary clocked logic.
 
