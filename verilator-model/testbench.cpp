@@ -109,7 +109,7 @@ void debugWrite(uint32_t addr, uint32_t val)
   debugAccess(addr, val, true);
 }
 
-void stepSingle (Vtop *mCpu)
+void stepSingle ()
 {
   // Read DBG_IE to see if it is enabled
   std::cout << "DBG_IE is " << std::hex << debugRead(DBG_IE) << std::dec << std::endl;
@@ -121,7 +121,7 @@ void stepSingle (Vtop *mCpu)
   uint32_t dbg_hit;
   do {
       dbg_hit = debugRead(DBG_HIT);
-      std::cout << "DBG_HIT reg " << std::hex << mCpu->debug_rdata_o << std::dec << std::endl;
+      std::cout << "DBG_HIT reg " << std::hex << dbg_hit << std::dec << std::endl;
   } while (!(dbg_hit & 1));
 
   // Clear DBG_HIT
@@ -202,9 +202,9 @@ main (int    argc,
 
   // Fix some signals for now.
 
-  //cpu->irq_i          = 0;
+  cpu->irq_i          = 0;
   cpu->debug_req_i    = 0;
-  cpu->fetch_enable_i = 1;
+  cpu->fetch_enable_i = 0;
 
   // Cycle through reset
 
@@ -224,16 +224,19 @@ main (int    argc,
     }
 
   loadProgram();
-
+  cpu->rstn_i = 1;
+  cpu->fetch_enable_i = 1;
 
   // Do some ordinary clocked logic.
 
-  cpu->rstn_i = 1;
-
   if (USE_DEBUGGER)
   {
+    // Enable traps for all exceptions
+    debugWrite(DBG_IE, 0xAC);
+
+    // Try and step 5 instructions
     for (int j=0; j<5; j++) {
-      stepSingle (cpu);
+      stepSingle ();
     }
   } else {
 
