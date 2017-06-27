@@ -111,11 +111,8 @@ void debugWrite(uint32_t addr, uint32_t val)
 
 void stepSingle ()
 {
-  // Read DBG_IE to see if it is enabled
-  std::cout << "DBG_IE is " << std::hex << debugRead(DBG_IE) << std::dec << std::endl;
-
   // Write HALT + SSTE into the debug register
-  debugWrite(DBG_CTRL, DBG_CTRL_SSTE);
+  debugWrite(DBG_CTRL, debugRead(DBG_CTRL) & DBG_CTRL_SSTE);
 
   // Keep reading the DBG_HIT register until it is SSTH
   uint32_t dbg_hit;
@@ -225,14 +222,14 @@ main (int    argc,
 
   loadProgram();
   cpu->rstn_i = 1;
-  cpu->fetch_enable_i = 1;
 
   // Do some ordinary clocked logic.
 
   if (USE_DEBUGGER)
   {
-    // Enable traps for all exceptions
+    // Enable traps for all exceptions, halt the CPU.
     debugWrite(DBG_IE, 0xAC);
+    debugWrite(DBG_CTRL, DBG_CTRL_HALT);
 
     // Try and step 5 instructions
     for (int j=0; j<5; j++) {
@@ -240,6 +237,7 @@ main (int    argc,
     }
   } else {
 
+    cpu->fetch_enable_i = 1;
 
     for (int i = 0; i < 100; i++)
       {
