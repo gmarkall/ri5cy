@@ -24,10 +24,129 @@
 #include "Vtop_ram__A10.h"
 #include "Vtop_dp_ram__A10.h"
 
+#include <iostream>
+#include <cstdint>
+#include <cstdlib>
+
+using std::cerr;
+using std::endl;
+
 
 // Count of clock ticks
 
 static vluint64_t  cpuTime = 0;
+
+  // Debug registers
+
+  const uint16_t DBG_CTRL    = 0x0000;  //!< Debug control
+  const uint16_t DBG_HIT     = 0x0004;  //!< Debug hit
+  const uint16_t DBG_IE      = 0x0008;  //!< Debug interrupt enable
+  const uint16_t DBG_CAUSE   = 0x000c;  //!< Debug cause (why entered debug)
+  const uint16_t DBG_GPR0    = 0x0400;  //!< General purpose register 0
+  const uint16_t DBG_GPR31   = 0x047c;  //!< General purpose register 41
+  const uint16_t DBG_NPC     = 0x2000;  //!< Next PC
+  const uint16_t DBG_PPC     = 0x2004;  //!< Prev PC
+
+  // Debug register flags
+
+  // FIXME: Changed to uint32_t to get to compile - constants too large. Check
+  // the constants are correct.
+  const uint32_t DBG_CTRL_HALT = 0x00010000;    //!< Halt core
+  const uint32_t DBG_CTRL_SSTE = 0x00000001;    //!< Single step core
+
+  // GDB register numbers
+
+  const int REG_R0  = 0;                //!< GDB R0 regnum
+  const int REG_R31 = 31;               //!< GDB R31 regnum
+
+static uint64_t mCycleCnt = 0;
+
+
+bool stepSingle (Vtop *mCpu)
+{
+// uint32_t pc;
+
+  mCpu->debug_req_i   = 1;
+  mCpu->debug_addr_i  = DBG_IE;
+  mCpu->debug_we_i    = 0;
+
+  // Write has succeeded when we get the grant signal asserted.
+  do
+    {
+      mCpu->clk_i = 0;
+      mCpu->eval ();
+      mCpu->clk_i = 1;
+      mCpu->eval ();
+      mCycleCnt++;
+      std::cout << "DBG_IE read cycle count " << mCycleCnt << std::endl;
+    }
+  while (mCpu->debug_gnt_o == 0);
+
+  std::cout << "DBG_IE is " << std::hex << mCpu->debug_rdata_o << std::dec << std::endl;
+
+ mCpu->rstn_i        = 1;
+
+ // Write HALT + SSTE into the debug register
+
+  mCpu->debug_req_i   = 1;
+  mCpu->debug_addr_i  = DBG_CTRL;
+  mCpu->debug_we_i    = 1;
+  mCpu->debug_wdata_i = DBG_CTRL_SSTE; // & DBG_CTRL_HALT;
+
+  // Write has succeeded when we get the grant signal asserted.
+  do
+    {
+      mCpu->clk_i = 0;
+      mCpu->eval ();
+      mCpu->clk_i = 1;
+      mCpu->eval ();
+      mCycleCnt++;
+      std::cout << "2 cycle count " << mCycleCnt << std::endl;
+    }
+  while (mCpu->debug_gnt_o == 0);
+
+// Read debug hit
+
+  mCpu->debug_req_i   = 1;
+  mCpu->debug_addr_i  = DBG_HIT;
+  mCpu->debug_we_i    = 0;
+
+  // Write has succeeded when we get the grant signal asserted.
+  do
+    {
+      mCpu->clk_i = 0;
+      mCpu->eval ();
+      mCpu->clk_i = 1;
+      mCpu->eval ();
+      mCycleCnt++;
+      std::cout << "3 cycle count " << mCycleCnt << std::endl;
+      std::cout << "DBG_HIT reg " << std::hex << mCpu->debug_rdata_o << std::dec << std::endl;
+    }
+  while (mCpu->debug_gnt_o == 0 && !(mCpu->debug_rdata_o & 1));
+
+
+  // Clearing debug hit
+
+  mCpu->debug_req_i   = 1;
+  mCpu->debug_addr_i  = DBG_HIT;
+  mCpu->debug_we_i    = 1;
+  mCpu->debug_wdata_i = 0;
+
+  // Write has succeeded when we get the grant signal asserted.
+  do
+    {
+      mCpu->clk_i = 0;
+      mCpu->eval ();
+      mCpu->clk_i = 1;
+      mCpu->eval ();
+      mCycleCnt++;
+      std::cout << "db_hit clear cycle count " << mCycleCnt << std::endl;
+    }
+  while (mCpu->debug_gnt_o == 0);
+
+  return true;
+}
+
 
 
 int
@@ -46,7 +165,7 @@ main (int    argc,
 
   // Fix some signals for now.
 
-  cpu->irq_i          = 0;
+  //cpu->irq_i          = 0;
   cpu->debug_req_i    = 0;
   cpu->fetch_enable_i = 1;
 
@@ -125,6 +244,20 @@ main (int    argc,
 
   // Do some ordinary clocked logic.
 
+  // do this like we are single stepping in GDB to try to get the illegal instruction
+
+  for (int j=0; j<5; j++) {
+    stepSingle (cpu);
+  }
+
+
+
+
+
+
+
+
+/*
   cpu->rstn_i = 1;
 
   for (int i = 0; i < 100; i++)
@@ -139,7 +272,7 @@ main (int    argc,
       cpuTime += 5;
       tfp->dump (cpuTime);
     }
-
+*/
   // Close VCD
 
   tfp->close ();
