@@ -65,6 +65,22 @@ static uint64_t mCycleCnt = 0;
 Vtop *cpu;
 VerilatedVcdC * tfp;
 
+void clockSpin(uint32_t cycles)
+{
+  for (uint32_t i = 0; i < cycles; i++)
+  {
+      cpu->clk_i = 0;
+      cpu->eval ();
+      cpuTime += 5;
+      tfp->dump (cpuTime);
+      cpu->clk_i = 1;
+      cpu->eval ();
+      cpuTime += 5;
+      tfp->dump (cpuTime);
+      mCycleCnt++;
+  }
+}
+
 void debugAccess(uint32_t addr, uint32_t& val, bool write_enable)
 {
   cpu->debug_req_i   = 1;
@@ -76,23 +92,24 @@ void debugAccess(uint32_t addr, uint32_t& val, bool write_enable)
     cpu->debug_wdata_i = val;
   }
 
-  // Access has succeeded when we get the grant signal asserted.
+  // Access has been acknowledged when we get the grant signal asserted.
   do
     {
-      cpu->clk_i = 0;
-      cpu->eval ();
-      cpuTime += 5;
-      tfp->dump (cpuTime);
-      cpu->clk_i = 1;
-      cpu->eval ();
-      cpuTime += 5;
-      tfp->dump (cpuTime);
-      mCycleCnt++;
+      clockSpin(1);
     }
   while (cpu->debug_gnt_o == 0);
 
+  // Don't need to request once we get the grant.
+  cpu->debug_req_i = 0;
+
   if (!write_enable)
   {
+    // For reads, we need to read the data when we get rvalid_o.
+    // This could be on the same cycle as the grant, or later.
+    while (cpu->debug_rvalid_o == 0)
+    {
+      clockSpin(1);
+    }
     val = cpu->debug_rdata_o;
   }
 }
@@ -109,20 +126,30 @@ void debugWrite(uint32_t addr, uint32_t val)
   debugAccess(addr, val, true);
 }
 
-void stepSingle ()
+void waitForDebugHit()
 {
-  // Write HALT + SSTE into the debug register
-  debugWrite(DBG_CTRL, debugRead(DBG_CTRL) & DBG_CTRL_SSTE);
-
   // Keep reading the DBG_HIT register until it is SSTH
   uint32_t dbg_hit;
   do {
       dbg_hit = debugRead(DBG_HIT);
       std::cout << "DBG_HIT reg " << std::hex << dbg_hit << std::dec << std::endl;
   } while (!(dbg_hit & 1));
+}
+
+void stepSingle ()
+{
+  std::cout << "DBG_CAUSE reg " << std::hex << debugRead(DBG_CAUSE) << std::dec << std::endl;
 
   // Clear DBG_HIT
   debugWrite(DBG_HIT, 0);
+
+  // Write SSTE into the debug register
+  debugWrite(DBG_CTRL, DBG_CTRL_SSTE);
+
+  waitForDebugHit();
+
+  // Halted again?
+  std::cout << "DBG_CTRL reg " << std::hex << debugRead(DBG_CTRL) << std::dec << std::endl;
 }
 
 void loadProgram()
@@ -139,7 +166,7 @@ void loadProgram()
   // li a2, 0
   // li a3, 0
   // li a7, 93
-  // ecall
+  // ebreak (was ecall)
   //
   // Execution begins at 0x80, so that's where we write our code.
 
@@ -180,7 +207,7 @@ void loadProgram()
 
   cpu->top->ram_i->dp_ram_i->writeByte (0x9c, 0x73);
   cpu->top->ram_i->dp_ram_i->writeByte (0x9d, 0x00);
-  cpu->top->ram_i->dp_ram_i->writeByte (0x9e, 0x00);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x9e, 0x10); // ebreak
   cpu->top->ram_i->dp_ram_i->writeByte (0x9f, 0x00);
 }
 
@@ -198,45 +225,43 @@ main (int    argc,
   tfp->open ("model.vcd");
 
   // Fix some signals for now.
-
   cpu->irq_i          = 0;
   cpu->debug_req_i    = 0;
   cpu->fetch_enable_i = 0;
 
   // Cycle through reset
-
   cpu->rstn_i = 0;
-
-  for (int i = 0; i < 100; i++)
-    {
-      cpu->clk_i = 0;
-      cpu->eval ();
-      cpuTime += 5;
-      tfp->dump (cpuTime);
-
-      cpu->clk_i = 1;
-      cpu->eval ();
-      cpuTime += 5;
-      tfp->dump (cpuTime);
-    }
-
-  loadProgram();
+  clockSpin(100);
   cpu->rstn_i = 1;
+
+  // Put a few instructions at the boot address
+  loadProgram();
 
   // Do some ordinary clocked logic.
 
   if (USE_DEBUGGER)
   {
-    // Enable traps for all exceptions, halt the CPU.
-    debugWrite(DBG_IE, 0xAC);
-    debugWrite(DBG_CTRL, DBG_CTRL_HALT);
+    cpu->fetch_enable_i = 1;
+    // Copy the testbench
+    debugWrite(DBG_CTRL, debugRead(DBG_CTRL) & DBG_CTRL_HALT);
+    while (!(debugRead(DBG_CTRL) & DBG_CTRL_HALT))
+    {
+      // NOTE: We get stuck spinning here - it is as if writing DBG_CTRL_HALT
+      // has no effect.
+      clockSpin(1);
+    }
+    debugWrite(DBG_IE, 0xF);
+    debugWrite(DBG_CTRL, debugRead(DBG_CTRL) & ~DBG_CTRL_HALT);
+
+    std::cout << "Stall" << std::endl;
+
+    cpu->fetch_enable_i = 1;
 
     // Try and step 5 instructions
     for (int j=0; j<5; j++) {
       stepSingle ();
     }
   } else {
-
     cpu->fetch_enable_i = 1;
 
     for (int i = 0; i < 100; i++)
