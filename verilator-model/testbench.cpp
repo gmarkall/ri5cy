@@ -153,9 +153,10 @@ void stepSingle ()
   debugWrite(DBG_HIT, 0);
 
   // Write SSTE into the debug register
+  debugWrite(DBG_CTRL, DBG_CTRL_HALT | DBG_CTRL_SSTE);
   debugWrite(DBG_CTRL, DBG_CTRL_SSTE);
 
-  //waitForDebugHit();
+  waitForDebugStall();
 
   // Halted again?
   std::cout << "DBG_CTRL reg " << std::hex << debugRead(DBG_CTRL) << std::dec << std::endl;
@@ -250,16 +251,11 @@ main (int    argc,
 
   if (USE_DEBUGGER)
   {
-    cpu->fetch_enable_i = 1;
     // Copy the testbench
     debugWrite(DBG_CTRL, debugRead(DBG_CTRL) | DBG_CTRL_HALT);
-    waitForDebugStall();
     debugWrite(DBG_IE, 0xF);
+    waitForDebugStall();
     debugWrite(DBG_CTRL, debugRead(DBG_CTRL) & ~DBG_CTRL_HALT);
-
-    std::cout << "Stall" << std::endl;
-
-    exit(0);
 
     cpu->fetch_enable_i = 1;
 
