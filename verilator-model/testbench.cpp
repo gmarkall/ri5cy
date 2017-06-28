@@ -147,10 +147,14 @@ void waitForDebugStall()
 
 void stepSingle ()
 {
-  std::cout << "DBG_CAUSE reg " << std::hex << debugRead(DBG_CAUSE) << std::dec << std::endl;
+  std::cout << "DBG_CTRL  " << std::hex << debugRead(DBG_CTRL) << std::dec << std::endl;
+  std::cout << "DBG_HIT   " << std::hex << debugRead(DBG_HIT) << std::dec << std::endl;
+  std::cout << "DBG_CAUSE " << std::hex << debugRead(DBG_CAUSE) << std::dec << std::endl;
+  std::cout << "DBG_NPC   " << std::hex << debugRead(DBG_NPC) << std::dec << std::endl;
+  std::cout << "DBG_PPC   " << std::hex << debugRead(DBG_PPC) << std::dec << std::endl;
 
   // Clear DBG_HIT
-  debugWrite(DBG_HIT, 0);
+  //debugWrite(DBG_HIT, 0);
 
   // Write SSTE into the debug register
   debugWrite(DBG_CTRL, DBG_CTRL_HALT | DBG_CTRL_SSTE);
@@ -159,7 +163,6 @@ void stepSingle ()
   waitForDebugStall();
 
   // Halted again?
-  std::cout << "DBG_CTRL reg " << std::hex << debugRead(DBG_CTRL) << std::dec << std::endl;
 }
 
 void loadProgram()
@@ -170,55 +173,63 @@ void loadProgram()
   // li a5, 64
   // li a4, 102
   // sw a4, 0(a5)
+  // ; Repeated <repeat_factor> times (20 at present)
   //
   // ; Then do something a bit like _exit(0)
   // li a1, 0
   // li a2, 0
   // li a3, 0
   // li a7, 93
-  // ebreak (was ecall)
+  // ecall
   //
   // Execution begins at 0x80, so that's where we write our code.
 
-  cpu->top->ram_i->dp_ram_i->writeByte (0x80, 0x93);
-  cpu->top->ram_i->dp_ram_i->writeByte (0x81, 0x07);
-  cpu->top->ram_i->dp_ram_i->writeByte (0x82, 0x00);
-  cpu->top->ram_i->dp_ram_i->writeByte (0x83, 0x04);
+  uint32_t addr = 0x80;
+  uint32_t repeat_factor = 20;
+  for (size_t i = 0; i < repeat_factor; i++)
+  {
+    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x0, 0x93);
+    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x1, 0x07);
+    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x2, 0x00);
+    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x3, 0x04);
 
-  cpu->top->ram_i->dp_ram_i->writeByte (0x84, 0x13);
-  cpu->top->ram_i->dp_ram_i->writeByte (0x85, 0x07);
-  cpu->top->ram_i->dp_ram_i->writeByte (0x86, 0x60);
-  cpu->top->ram_i->dp_ram_i->writeByte (0x87, 0x06);
+    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x4, 0x13);
+    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x5, 0x07);
+    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x6, 0x60);
+    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x7, 0x06);
 
-  cpu->top->ram_i->dp_ram_i->writeByte (0x88, 0x23);
-  cpu->top->ram_i->dp_ram_i->writeByte (0x89, 0xa0);
-  cpu->top->ram_i->dp_ram_i->writeByte (0x8a, 0xe7);
-  cpu->top->ram_i->dp_ram_i->writeByte (0x8b, 0x00);
+    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x8, 0x23);
+    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x9, 0xa0);
+    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0xa, 0xe7);
+    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0xb, 0x00);
 
-  cpu->top->ram_i->dp_ram_i->writeByte (0x8c, 0x93);
-  cpu->top->ram_i->dp_ram_i->writeByte (0x8d, 0x05);
-  cpu->top->ram_i->dp_ram_i->writeByte (0x8e, 0x00);
-  cpu->top->ram_i->dp_ram_i->writeByte (0x8f, 0x00);
+    addr += 0xC;
+  }
 
-  cpu->top->ram_i->dp_ram_i->writeByte (0x90, 0x13);
-  cpu->top->ram_i->dp_ram_i->writeByte (0x91, 0x06);
-  cpu->top->ram_i->dp_ram_i->writeByte (0x92, 0x00);
-  cpu->top->ram_i->dp_ram_i->writeByte (0x93, 0x00);
+  cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x0, 0x93);
+  cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x1, 0x05);
+  cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x2, 0x00);
+  cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x3, 0x00);
 
-  cpu->top->ram_i->dp_ram_i->writeByte (0x94, 0x93);
-  cpu->top->ram_i->dp_ram_i->writeByte (0x95, 0x06);
-  cpu->top->ram_i->dp_ram_i->writeByte (0x96, 0x00);
-  cpu->top->ram_i->dp_ram_i->writeByte (0x97, 0x00);
+  cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x4, 0x13);
+  cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x5, 0x06);
+  cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x6, 0x00);
+  cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x7, 0x00);
 
-  cpu->top->ram_i->dp_ram_i->writeByte (0x98, 0x93);
-  cpu->top->ram_i->dp_ram_i->writeByte (0x99, 0x08);
-  cpu->top->ram_i->dp_ram_i->writeByte (0x9a, 0xd0);
-  cpu->top->ram_i->dp_ram_i->writeByte (0x9b, 0x05);
+  cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x8, 0x93);
+  cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x9, 0x06);
+  cpu->top->ram_i->dp_ram_i->writeByte (addr + 0xa, 0x00);
+  cpu->top->ram_i->dp_ram_i->writeByte (addr + 0xb, 0x00);
 
-  cpu->top->ram_i->dp_ram_i->writeByte (0x9c, 0x73);
-  cpu->top->ram_i->dp_ram_i->writeByte (0x9d, 0x00);
-  cpu->top->ram_i->dp_ram_i->writeByte (0x9e, 0x10); // ebreak
-  cpu->top->ram_i->dp_ram_i->writeByte (0x9f, 0x00);
+  cpu->top->ram_i->dp_ram_i->writeByte (addr + 0xc, 0x93);
+  cpu->top->ram_i->dp_ram_i->writeByte (addr + 0xd, 0x08);
+  cpu->top->ram_i->dp_ram_i->writeByte (addr + 0xe, 0xd0);
+  cpu->top->ram_i->dp_ram_i->writeByte (addr + 0xf, 0x05);
+
+  cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x10, 0x73);
+  cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x11, 0x00);
+  cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x12, 0x00);
+  cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x13, 0x00);
 }
 
 int
@@ -251,13 +262,16 @@ main (int    argc,
 
   if (USE_DEBUGGER)
   {
+    cpu->fetch_enable_i = 1;
+
+    clockSpin(20);
+
     // Copy the testbench
     debugWrite(DBG_CTRL, debugRead(DBG_CTRL) | DBG_CTRL_HALT);
     debugWrite(DBG_IE, 0xF);
     waitForDebugStall();
     debugWrite(DBG_CTRL, debugRead(DBG_CTRL) & ~DBG_CTRL_HALT);
 
-    cpu->fetch_enable_i = 1;
 
     // Try and step 5 instructions
     for (int j=0; j<5; j++) {
