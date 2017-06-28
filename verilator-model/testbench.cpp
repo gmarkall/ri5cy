@@ -136,6 +136,15 @@ void waitForDebugHit()
   } while (!(dbg_hit & 1));
 }
 
+// Assumes stall could happen at any point - don't need to wait a cycle to check
+void waitForDebugStall()
+{
+  while (!(debugRead(DBG_CTRL) & DBG_CTRL_HALT))
+  {
+    clockSpin(1);
+  }
+}
+
 void stepSingle ()
 {
   std::cout << "DBG_CAUSE reg " << std::hex << debugRead(DBG_CAUSE) << std::dec << std::endl;
@@ -146,7 +155,7 @@ void stepSingle ()
   // Write SSTE into the debug register
   debugWrite(DBG_CTRL, DBG_CTRL_SSTE);
 
-  waitForDebugHit();
+  //waitForDebugHit();
 
   // Halted again?
   std::cout << "DBG_CTRL reg " << std::hex << debugRead(DBG_CTRL) << std::dec << std::endl;
@@ -243,17 +252,14 @@ main (int    argc,
   {
     cpu->fetch_enable_i = 1;
     // Copy the testbench
-    debugWrite(DBG_CTRL, debugRead(DBG_CTRL) & DBG_CTRL_HALT);
-    while (!(debugRead(DBG_CTRL) & DBG_CTRL_HALT))
-    {
-      // NOTE: We get stuck spinning here - it is as if writing DBG_CTRL_HALT
-      // has no effect.
-      clockSpin(1);
-    }
+    debugWrite(DBG_CTRL, debugRead(DBG_CTRL) | DBG_CTRL_HALT);
+    waitForDebugStall();
     debugWrite(DBG_IE, 0xF);
     debugWrite(DBG_CTRL, debugRead(DBG_CTRL) & ~DBG_CTRL_HALT);
 
     std::cout << "Stall" << std::endl;
+
+    exit(0);
 
     cpu->fetch_enable_i = 1;
 
