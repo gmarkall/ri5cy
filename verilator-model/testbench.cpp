@@ -154,10 +154,9 @@ void stepSingle ()
   std::cout << "DBG_PPC   " << std::hex << debugRead(DBG_PPC) << std::dec << std::endl;
 
   // Clear DBG_HIT
-  //debugWrite(DBG_HIT, 0);
+  debugWrite(DBG_HIT, 0);
 
   // Write SSTE into the debug register
-  debugWrite(DBG_CTRL, DBG_CTRL_HALT | DBG_CTRL_SSTE);
   debugWrite(DBG_CTRL, DBG_CTRL_SSTE);
 
   waitForDebugStall();
@@ -271,7 +270,8 @@ main (int    argc,
     debugWrite(DBG_CTRL, debugRead(DBG_CTRL) | DBG_CTRL_HALT);
     debugWrite(DBG_IE, 0xF);
     waitForDebugStall();
-    debugWrite(DBG_CTRL, debugRead(DBG_CTRL) & ~DBG_CTRL_HALT);
+    // Set single step
+    debugWrite(DBG_CTRL, DBG_CTRL_HALT | DBG_CTRL_SSTE);
 
     // Try and step 5 instructions
     for (int j=0; j<5; j++) {
