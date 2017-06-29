@@ -22,7 +22,8 @@
 
 module top
 #(
-  parameter ADDR_WIDTH = 16,
+  parameter ADDR_WIDTH = 22,		// 4MB to match PicoRV32
+  parameter DATA_WIDTH = 32,
   parameter BOOT_ADDR  = 'h80		// Consistent with Pulpino
   )
 (
@@ -118,11 +119,13 @@ module top
 
    ram
      #(
-       .ADDR_WIDTH (ADDR_WIDTH)
+       .ADDR_WIDTH (ADDR_WIDTH),
+       .DATA_WIDTH (DATA_WIDTH)
        )
    ram_i
      (
       .clk            ( clk_i        ),
+      .rstn           ( rstn_i       ),
 
       .instr_req_i    ( instr_req    ),
       .instr_addr_i   ( instr_addr   ),
