@@ -48,7 +48,7 @@ VSRC = ../include/riscv_defines.sv        \
        ../cs_registers.sv                 \
        ../debug_unit.sv                   \
        ../decoder.sv                      \
-       sp_ram.sv                          \
+       dp_ram.sv                          \
        ../exc_controller.sv               \
        ../ex_stage.sv                     \
        ../hwloop_controller.sv            \
@@ -94,7 +94,7 @@ $(VLIB): $(VMK)
 $(VMK): $(VSRC)
 	verilator -Wno-CASEINCOMPLETE -Wno-LITENDIAN -Wno-UNOPT \
 	          -Wno-UNOPTFLAT -Wno-WIDTH -Wno-fatal --top-module top \
-	          --trace --Mdir $(VDIR) --trace -DPULP_FPGA_EMUL -cc \
+	          --Mdir $(VDIR) --trace -DPULP_FPGA_EMUL -cc \
 	          +incdir+$(VINC) $(VSRC)
 
 .PHONY: clean

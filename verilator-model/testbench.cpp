@@ -21,8 +21,8 @@
 #include "verilated_vcd_c.h"
 #include "Vtop.h"
 #include "Vtop_top.h"
-#include "Vtop_ram.h"
-#include "Vtop_sp_ram__A16.h"
+#include "Vtop_ram__A10.h"
+#include "Vtop_dp_ram__A10.h"
 
 
 // Count of clock ticks
@@ -83,45 +83,45 @@ main (int    argc,
   //
   // Execution begins at 0x80, so that's where we write our code.
 
-  cpu->top->ram_i->sp_ram_i->writeByte (0x80, 0x93);
-  cpu->top->ram_i->sp_ram_i->writeByte (0x81, 0x07);
-  cpu->top->ram_i->sp_ram_i->writeByte (0x82, 0x00);
-  cpu->top->ram_i->sp_ram_i->writeByte (0x83, 0x04);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x80, 0x93);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x81, 0x07);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x82, 0x00);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x83, 0x04);
 
-  cpu->top->ram_i->sp_ram_i->writeByte (0x84, 0x13);
-  cpu->top->ram_i->sp_ram_i->writeByte (0x85, 0x07);
-  cpu->top->ram_i->sp_ram_i->writeByte (0x86, 0x60);
-  cpu->top->ram_i->sp_ram_i->writeByte (0x87, 0x06);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x84, 0x13);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x85, 0x07);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x86, 0x60);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x87, 0x06);
 
-  cpu->top->ram_i->sp_ram_i->writeByte (0x88, 0x23);
-  cpu->top->ram_i->sp_ram_i->writeByte (0x89, 0xa0);
-  cpu->top->ram_i->sp_ram_i->writeByte (0x8a, 0xe7);
-  cpu->top->ram_i->sp_ram_i->writeByte (0x8b, 0x00);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x88, 0x23);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x89, 0xa0);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x8a, 0xe7);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x8b, 0x00);
 
-  cpu->top->ram_i->sp_ram_i->writeByte (0x8c, 0x93);
-  cpu->top->ram_i->sp_ram_i->writeByte (0x8d, 0x05);
-  cpu->top->ram_i->sp_ram_i->writeByte (0x8e, 0x00);
-  cpu->top->ram_i->sp_ram_i->writeByte (0x8f, 0x00);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x8c, 0x93);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x8d, 0x05);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x8e, 0x00);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x8f, 0x00);
 
-  cpu->top->ram_i->sp_ram_i->writeByte (0x90, 0x13);
-  cpu->top->ram_i->sp_ram_i->writeByte (0x91, 0x06);
-  cpu->top->ram_i->sp_ram_i->writeByte (0x92, 0x00);
-  cpu->top->ram_i->sp_ram_i->writeByte (0x93, 0x00);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x90, 0x13);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x91, 0x06);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x92, 0x00);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x93, 0x00);
 
-  cpu->top->ram_i->sp_ram_i->writeByte (0x94, 0x93);
-  cpu->top->ram_i->sp_ram_i->writeByte (0x95, 0x06);
-  cpu->top->ram_i->sp_ram_i->writeByte (0x96, 0x00);
-  cpu->top->ram_i->sp_ram_i->writeByte (0x97, 0x00);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x94, 0x93);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x95, 0x06);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x96, 0x00);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x97, 0x00);
 
-  cpu->top->ram_i->sp_ram_i->writeByte (0x98, 0x93);
-  cpu->top->ram_i->sp_ram_i->writeByte (0x99, 0x08);
-  cpu->top->ram_i->sp_ram_i->writeByte (0x9a, 0xd0);
-  cpu->top->ram_i->sp_ram_i->writeByte (0x9b, 0x05);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x98, 0x93);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x99, 0x08);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x9a, 0xd0);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x9b, 0x05);
 
-  cpu->top->ram_i->sp_ram_i->writeByte (0x9c, 0x73);
-  cpu->top->ram_i->sp_ram_i->writeByte (0x9d, 0x00);
-  cpu->top->ram_i->sp_ram_i->writeByte (0x9e, 0x00);
-  cpu->top->ram_i->sp_ram_i->writeByte (0x9f, 0x00);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x9c, 0x73);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x9d, 0x00);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x9e, 0x00);
+  cpu->top->ram_i->dp_ram_i->writeByte (0x9f, 0x00);
 
   // Do some ordinary clocked logic.
 
