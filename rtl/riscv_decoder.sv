@@ -72,6 +72,10 @@ module riscv_decoder
   input  logic [31:0] instr_rdata_i,           // instruction read from instr memory/cache
   input  logic        illegal_c_insn_i,        // compressed instruction decode failed
 
+  // Bit op signals
+  output logic [BIT_OP_WIDTH-1:0] bit_operator_o,
+  output logic bit_op_en_o,
+
   // ALU signals
   output logic        alu_en_o,                // ALU enable
   output logic [ALU_OP_WIDTH-1:0] alu_operator_o, // ALU operation selection
@@ -176,6 +180,9 @@ module riscv_decoder
   begin
     jump_in_id                  = BRANCH_NONE;
     jump_target_mux_sel_o       = JT_JAL;
+
+    bit_op_en_o                 = 1'b0;
+    bit_operator_o              = BIT_OP_BITCOUNT;
 
     alu_en_o                    = 1'b1;
     alu_operator_o              = ALU_SLTU;
@@ -417,6 +424,30 @@ module riscv_decoder
           // LD -> RV64 only
           illegal_insn_o = 1'b1;
         end
+      end
+
+      ////////////////////////////////////////////////////
+      //  __  ____   ______ ___ _____ ___  ____  ____   //
+      // |  \/  \ \ / / __ )_ _|_   _/ _ \|  _ \/ ___|  //
+      // | |\/| |\ V /|  _ \| |  | || | | | |_) \___ \  //
+      // | |  | | | | | |_) | |  | || |_| |  __/ ___) | //
+      // |_|  |_| |_| |____/___| |_| \___/|_|   |____/  //
+      //                                                //
+      ////////////////////////////////////////////////////
+
+      OPCODE_MYBITOPS: begin   // My bit operations
+        if (instr_rdata_i[14:12] == 3'b000) begin
+          // Bit count
+          bit_op_en_o                 = 1'b1;
+          bit_operator_o              = BIT_OP_BITCOUNT;
+        end
+        else if (instr_rdata_i[14:12] == 3'b001) begin
+          // Bit reverse
+          bit_op_en_o                 = 1'b1;
+          bit_operator_o              = BIT_OP_REVERSE;
+        end
+        else
+          illegal_insn_o = 1'b1;
       end
 
 

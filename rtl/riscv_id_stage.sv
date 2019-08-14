@@ -119,6 +119,10 @@ module riscv_id_stage
     output logic [5:0]  regfile_alu_waddr_ex_o,
     output logic        regfile_alu_we_ex_o,
 
+    // Bit ops
+    output logic        bit_op_en_ex_o,
+    output logic [BIT_OP_WIDTH-1:0] bit_operator_ex_o,
+
     // ALU
     output logic        alu_en_ex_o,
     output logic [ALU_OP_WIDTH-1:0] alu_operator_ex_o,
@@ -321,6 +325,10 @@ module riscv_id_stage
   logic [31:0] regfile_data_ra_id;
   logic [31:0] regfile_data_rb_id;
   logic [31:0] regfile_data_rc_id;
+
+  // Bit operation control
+  logic         bit_op_en;
+  logic [BIT_OP_WIDTH-1:0] bit_operator;
 
   // ALU Control
   logic        alu_en;
@@ -1028,6 +1036,10 @@ module riscv_id_stage
     .instr_rdata_i                   ( instr                     ),
     .illegal_c_insn_i                ( illegal_c_insn_i          ),
 
+    // Bit op signals
+    .bit_op_en_o                     ( bit_op_en                 ),
+    .bit_operator_o                  ( bit_operator              ),
+
     // ALU signals
     .alu_en_o                        ( alu_en                    ),
     .alu_operator_o                  ( alu_operator              ),
@@ -1341,6 +1353,9 @@ module riscv_id_stage
       imm_vec_ext_ex_o            <= '0;
       alu_vec_mode_ex_o           <= '0;
 
+      bit_op_en_ex_o              <= '0;
+      bit_operator_ex_o           <= BIT_OP_BITCOUNT;
+
       mult_operator_ex_o          <= '0;
       mult_operand_a_ex_o         <= '0;
       mult_operand_b_ex_o         <= '0;
@@ -1435,6 +1450,10 @@ module riscv_id_stage
             alu_vec_mode_ex_o         <= alu_vec_mode;
           end
         end
+
+        bit_op_en_ex_o              <= bit_op_en;
+        if (bit_op_en_ex_o)
+          bit_operator_ex_o         <= bit_operator;
 
         mult_en_ex_o                <= mult_en;
         if (mult_int_en) begin
