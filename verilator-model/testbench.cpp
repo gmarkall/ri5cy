@@ -174,15 +174,15 @@ void loadProgram()
   uint32_t repeat_factor = 20;
   for (size_t i = 0; i < repeat_factor; i++)
   {
-    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x0, 0x93);
-    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x1, 0x07);
+    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x0, 0x0b);
+    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x1, 0x00);
     cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x2, 0x00);
-    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x3, 0x04);
+    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x3, 0x00);
 
-    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x4, 0x13);
-    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x5, 0x07);
-    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x6, 0x60);
-    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x7, 0x06);
+    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x4, 0x0b);
+    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x5, 0x10);
+    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x6, 0x00);
+    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x7, 0x00);
 
     cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x8, 0x23);
     cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x9, 0xa0);

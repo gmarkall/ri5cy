@@ -28,4 +28,16 @@ module riscv_bitops
   input logic [BIT_OP_WIDTH-1:0] operator_i
 );
 
+  always_ff @(posedge clk)
+  begin
+    if (enable_i) begin
+      if (operator_i == BIT_OP_BITCOUNT)
+        $display("%t: Bitcount instruction\n", $time);
+      else if (operator_i == BIT_OP_REVERSE)
+        $display("%t: Reverse instruction\n", $time);
+    end
+    else
+      $display("%t: Not enabled\n", $time);
+  end
+
 endmodule
