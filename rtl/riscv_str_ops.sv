@@ -26,8 +26,14 @@ module riscv_str_ops
   input logic                    clk,
   input logic                    enable_i,
   input logic [STR_OP_WIDTH-1:0] operator_i,
-  input logic [31:0]             operand_i
+  input logic [31:0]             operand_i,
+
+  output logic [31:0]            result_o
 );
+
+  always_comb begin
+    result_o = enable_i ? 32'h12345678 : 32'b0;
+  end
 
   always_ff @(posedge clk)
   begin
