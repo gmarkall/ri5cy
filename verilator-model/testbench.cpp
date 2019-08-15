@@ -188,6 +188,7 @@ void loadProgram()
   writeInst(0x00200613);
   writeInst(0x00300693);
   writeInst(0x0005878b); // Upper:  upper a5, a1
+  writeInst(0x00178813); // addi a6, a5, 1
   writeInst(0x0006100b); // Lower
 
   //uint32_t addr = 0x80;
