@@ -55,6 +55,7 @@ module riscv_ex_stage
   // Str op signals from ID stage
   input logic         str_op_en_i,
   input logic [STR_OP_WIDTH-1:0] str_operator_i,
+  input logic [31:0]  str_operand_i,
 
   // ALU signals from ID stage
   input  logic [ALU_OP_WIDTH-1:0] alu_operator_i,
@@ -257,7 +258,8 @@ module riscv_ex_stage
    (
     .clk                 ( clk             ),
     .enable_i            ( str_op_en_i     ),
-    .operator_i          ( str_operator_i  )
+    .operator_i          ( str_operator_i  ),
+    .operand_i           ( str_operand_i   )
    );
 
   ////////////////////////////

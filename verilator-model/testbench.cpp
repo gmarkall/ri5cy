@@ -168,28 +168,33 @@ void stepSingle ()
 // ecall
 //
 // Execution begins at 0x80, so that's where we write our code.
+uint32_t addr = 0x80;
+
+void writeInst(uint32_t inst)
+{
+  cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x0, (inst >>  0) & 0xFF);
+  cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x1, (inst >>  8) & 0xFF);
+  cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x2, (inst >> 16) & 0xFF);
+  cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x3, (inst >> 24) & 0xFF);
+
+  addr += 4;
+}
+
 void loadProgram()
 {
-  uint32_t addr = 0x80;
+  writeInst(0x00000513);
+  writeInst(0x00100593);
+  writeInst(0x00200613);
+  writeInst(0x00300693);
+  writeInst(0x0005800b); // Upper
+  writeInst(0x0006100b); // Lower
+
+  //uint32_t addr = 0x80;
   uint32_t repeat_factor = 20;
   for (size_t i = 0; i < repeat_factor; i++)
   {
-    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x0, 0x0b);
-    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x1, 0x00);
-    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x2, 0x00);
-    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x3, 0x00);
-
-    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x4, 0x0b);
-    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x5, 0x10);
-    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x6, 0x00);
-    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x7, 0x00);
-
-    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x8, 0x23);
-    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x9, 0xa0);
-    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0xa, 0xe7);
-    cpu->top->ram_i->dp_ram_i->writeByte (addr + 0xb, 0x00);
-
-    addr += 0xC;
+    writeInst(0x0005800b); // Upper
+    writeInst(0x0006100b); // Lower
   }
 
   cpu->top->ram_i->dp_ram_i->writeByte (addr + 0x0, 0x93);

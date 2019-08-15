@@ -25,12 +25,14 @@ module riscv_str_ops
 (
   input logic                    clk,
   input logic                    enable_i,
-  input logic [STR_OP_WIDTH-1:0] operator_i
+  input logic [STR_OP_WIDTH-1:0] operator_i,
+  input logic [31:0]             operand_i
 );
 
   always_ff @(posedge clk)
   begin
     if (enable_i) begin
+      $display("Operand: %x", operand_i);
       if (operator_i == STR_OP_UPPER)
         $display("%t: Upper instruction\n", $time);
       else if (operator_i == STR_OP_LOWER)
