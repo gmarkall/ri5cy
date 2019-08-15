@@ -182,8 +182,9 @@ void writeInst(uint32_t inst)
 
 void loadProgram()
 {
-  writeInst(0x00000513);
-  writeInst(0x00100593);
+  //writeInst(0x00000513);
+  writeInst(0x746575b7); // a0 = "test"
+  writeInst(0x37458593); //  "
   writeInst(0x00200613);
   writeInst(0x00300693);
   writeInst(0x0005800b); // Upper
