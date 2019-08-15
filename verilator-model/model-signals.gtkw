@@ -1,0 +1,124 @@
+[*]
+[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
+[*] Thu Aug 15 23:34:48 2019
+[*]
+[dumpfile] "Z:\home\graham\projects\sam-leonard\my-ri5cy\verilator-model\model.vcd"
+[dumpfile_mtime] "Thu Aug 15 23:26:58 2019"
+[dumpfile_size] 181277
+[savefile] "Z:\home\graham\projects\sam-leonard\my-ri5cy\verilator-model\model-signals.gtkw"
+[timestart] 151
+[size] 1920 1147
+[pos] -1 -1
+*-5.000000 244 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] TOP.
+[treeopen] TOP.top.
+[treeopen] TOP.top.riscv_core_i.
+[treeopen] TOP.top.riscv_core_i.ex_stage_i.
+[treeopen] TOP.top.riscv_core_i.id_stage_i.
+[treeopen] TOP.top.riscv_core_i.id_stage_i.registers_i.
+[treeopen] TOP.top.riscv_core_i.id_stage_i.registers_i.riscv_register_file_i.
+[sst_width] 296
+[signals_width] 254
+[sst_expanded] 1
+[sst_vpaned_height] 346
+@28
+TOP.clk_i
+@23
+TOP.top.riscv_core_i.id_stage_i.decoder_i.instr_rdata_i[31:0]
+@22
+TOP.top.riscv_core_i.id_stage_i.alu_operand_a[31:0]
+TOP.top.riscv_core_i.id_stage_i.alu_operand_a_ex_o[31:0]
+TOP.top.riscv_core_i.id_stage_i.registers_i.raddr_a_i[5:0]
+@28
+TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.enable_i
+@22
+TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.operand_i[31:0]
+@28
+TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.operator_i[1:0]
+TOP.top.riscv_core_i.id_stage_i.id_valid_o
+@c00022
+TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+@28
+(0)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(1)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(2)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(3)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(4)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(5)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(6)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(7)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(8)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(9)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(10)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(11)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(12)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(13)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(14)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(15)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(16)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(17)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(18)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(19)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(20)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(21)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(22)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(23)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(24)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(25)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(26)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(27)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(28)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(29)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(30)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+(31)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+@1401200
+-group_end
+@c00022
+TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+@28
+(0)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(1)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(2)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(3)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(4)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(5)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(6)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(7)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(8)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(9)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(10)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(11)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(12)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(13)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(14)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(15)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(16)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(17)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(18)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(19)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(20)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(21)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(22)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(23)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(24)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(25)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(26)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(27)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(28)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(29)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(30)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+(31)TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result[31:0]
+@1401200
+-group_end
+@28
+TOP.top.riscv_core_i.id_stage_i.decoder_i.regfile_alu_we_o
+@22
+TOP.top.riscv_core_i.id_stage_i.regfile_alu_wdata_fw_i[31:0]
+TOP.top.riscv_core_i.id_stage_i.registers_i.riscv_register_file_i.wdata_a_i[31:0]
+TOP.top.riscv_core_i.id_stage_i.registers_i.riscv_register_file_i.wdata_b_i[31:0]
+@28
+TOP.top.riscv_core_i.id_stage_i.registers_i.riscv_register_file_i.we_b_i
+@22
+TOP.top.riscv_core_i.id_stage_i.registers_i.riscv_register_file_i.waddr_b_i[5:0]
+[pattern_trace] 1
+[pattern_trace] 0
