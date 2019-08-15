@@ -72,9 +72,9 @@ module riscv_decoder
   input  logic [31:0] instr_rdata_i,           // instruction read from instr memory/cache
   input  logic        illegal_c_insn_i,        // compressed instruction decode failed
 
-  // Bit op signals
-  output logic [BIT_OP_WIDTH-1:0] bit_operator_o,
-  output logic bit_op_en_o,
+  // Str op signals
+  output logic [STR_OP_WIDTH-1:0] str_operator_o,
+  output logic str_op_en_o,
 
   // ALU signals
   output logic        alu_en_o,                // ALU enable
@@ -181,8 +181,8 @@ module riscv_decoder
     jump_in_id                  = BRANCH_NONE;
     jump_target_mux_sel_o       = JT_JAL;
 
-    bit_op_en_o                 = 1'b0;
-    bit_operator_o              = BIT_OP_BITCOUNT;
+    str_op_en_o                 = 1'b0;
+    str_operator_o              = STR_OP_UPPER;
 
     alu_en_o                    = 1'b1;
     alu_operator_o              = ALU_SLTU;
@@ -426,30 +426,39 @@ module riscv_decoder
         end
       end
 
-      ////////////////////////////////////////////////////
-      //  __  ____   ______ ___ _____ ___  ____  ____   //
-      // |  \/  \ \ / / __ )_ _|_   _/ _ \|  _ \/ ___|  //
-      // | |\/| |\ V /|  _ \| |  | || | | | |_) \___ \  //
-      // | |  | | | | | |_) | |  | || |_| |  __/ ___) | //
-      // |_|  |_| |_| |____/___| |_| \___/|_|   |____/  //
-      //                                                //
-      ////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////////
+      //  ____ _____ ____  ___ _   _  ____    ___  ____  ____   //
+      // / ___|_   _|  _ \|_ _| \ | |/ ___|  / _ \|  _ \/ ___|  //
+      // \___ \ | | | |_) || ||  \| | |  _  | | | | |_) \___ \  //
+      //  ___) || | |  _ < | || |\  | |_| | | |_| |  __/ ___) | //
+      // |____/ |_| |_| \_\___|_| \_|\____|  \___/|_|   |____/  //
+      //                                                        //
+      ////////////////////////////////////////////////////////////
 
-      OPCODE_MYBITOPS: begin   // My bit operations
+      OPCODE_STR_OPS: begin
         if (instr_rdata_i[14:12] == 3'b000) begin
-          // Bit count
-          bit_op_en_o                 = 1'b1;
-          bit_operator_o              = BIT_OP_BITCOUNT;
+          // Upper case
+          str_op_en_o                 = 1'b1;
+          str_operator_o              = STR_OP_UPPER;
         end
         else if (instr_rdata_i[14:12] == 3'b001) begin
-          // Bit reverse
-          bit_op_en_o                 = 1'b1;
-          bit_operator_o              = BIT_OP_REVERSE;
+          // Lower case
+          str_op_en_o                 = 1'b1;
+          str_operator_o              = STR_OP_LOWER;
+        end
+        else if (instr_rdata_i[14:12] == 3'b010) begin
+          // Leet speak
+          str_op_en_o                 = 1'b1;
+          str_operator_o              = STR_OP_LEET;
+        end
+        else if (instr_rdata_i[14:12] == 3'b011) begin
+          // ROT13
+          str_op_en_o                 = 1'b1;
+          str_operator_o              = STR_OP_ROT13;
         end
         else
           illegal_insn_o = 1'b1;
       end
-
 
       //////////////////////////
       //     _    _    _   _  //

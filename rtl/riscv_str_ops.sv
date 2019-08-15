@@ -11,30 +11,34 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Engineer:       Graham Markall - graham.markall@embecosm.com               //
 //                                                                            //
-// Design Name:    BITOPS                                                     //
+// Design Name:    STR_OPS                                                    //
 // Project Name:   RI5CY                                                      //
 // Language:       SystemVerilog                                              //
 //                                                                            //
-// Description:    Simple custom bitops module for teaching / workshop.       //
+// Description:    Simple string ops module for teaching / workshop.          //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
 import riscv_defines::*;
 
-module riscv_bitops
+module riscv_str_ops
 (
-  input logic                   clk,
-  input logic                   enable_i,
-  input logic [BIT_OP_WIDTH-1:0] operator_i
+  input logic                    clk,
+  input logic                    enable_i,
+  input logic [STR_OP_WIDTH-1:0] operator_i
 );
 
   always_ff @(posedge clk)
   begin
     if (enable_i) begin
-      if (operator_i == BIT_OP_BITCOUNT)
-        $display("%t: Bitcount instruction\n", $time);
-      else if (operator_i == BIT_OP_REVERSE)
-        $display("%t: Reverse instruction\n", $time);
+      if (operator_i == STR_OP_UPPER)
+        $display("%t: Upper instruction\n", $time);
+      else if (operator_i == STR_OP_LOWER)
+        $display("%t: Lower instruction\n", $time);
+      else if (operator_i == STR_OP_LEET)
+        $display("%t: Leet speak instruction\n", $time);
+      else if (operator_i == STR_OP_ROT13)
+        $display("%t: Rot13 instruction\n", $time);
     end
     else
       $display("%t: Not enabled\n", $time);

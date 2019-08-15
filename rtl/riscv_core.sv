@@ -170,9 +170,9 @@ module riscv_core
 
   logic [31:0] pc_ex; // PC of last executed branch or p.elw
 
-  // Bit op control
-  logic        bit_op_en_ex;
-  logic [BIT_OP_WIDTH-1:0] bit_operator_ex;
+  // Str op control
+  logic        str_op_en_ex;
+  logic [STR_OP_WIDTH-1:0] str_operator_ex;
 
   // ALU Control
   logic        alu_en_ex;
@@ -599,8 +599,8 @@ module riscv_core
     // From the Pipeline ID/EX
     .pc_ex_o                      ( pc_ex                ),
 
-    .bit_op_en_ex_o               ( bit_op_en_ex         ),
-    .bit_operator_ex_o            ( bit_operator_ex      ),
+    .str_op_en_ex_o               ( str_op_en_ex         ),
+    .str_operator_ex_o            ( str_operator_ex      ),
 
     .alu_en_ex_o                  ( alu_en_ex            ),
     .alu_operator_ex_o            ( alu_operator_ex      ),
@@ -764,9 +764,9 @@ module riscv_core
     .clk                        ( clk                          ),
     .rst_n                      ( rst_ni                       ),
 
-    // Bit op signals from ID stage
-    .bit_op_en_i                ( bit_op_en_ex                 ),
-    .bit_operator_i             ( bit_operator_ex              ),
+    // Str op signals from ID stage
+    .str_op_en_i                ( str_op_en_ex                 ),
+    .str_operator_i             ( str_operator_ex              ),
 
     // Alu signals from ID stage
     .alu_en_i                   ( alu_en_ex                    ),

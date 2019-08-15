@@ -52,9 +52,9 @@ module riscv_ex_stage
   input  logic        clk,
   input  logic        rst_n,
 
-  // Bit op signals from ID stage
-  input logic         bit_op_en_i,
-  input logic [BIT_OP_WIDTH-1:0] bit_operator_i,
+  // Str op signals from ID stage
+  input logic         str_op_en_i,
+  input logic [STR_OP_WIDTH-1:0] str_operator_i,
 
   // ALU signals from ID stage
   input  logic [ALU_OP_WIDTH-1:0] alu_operator_i,
@@ -253,11 +253,11 @@ module riscv_ex_stage
   //                                                //
   ////////////////////////////////////////////////////
 
-   riscv_bitops riscv_bitops_i
+   riscv_str_ops riscv_str_ops_i
    (
     .clk                 ( clk             ),
-    .enable_i            ( bit_op_en_i     ),
-    .operator_i          ( bit_operator_i  )
+    .enable_i            ( str_op_en_i     ),
+    .operator_i          ( str_operator_i  )
    );
 
   ////////////////////////////

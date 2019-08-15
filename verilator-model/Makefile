@@ -49,7 +49,7 @@ VSRC = cluster_clock_gating.sv            \
        ../rtl/riscv_alu.sv                    \
        ../rtl/riscv_alu_basic.sv              \
        ../rtl/riscv_alu_div.sv                \
-       ../rtl/riscv_bitops.sv                 \
+       ../rtl/riscv_str_ops.sv                \
        ../rtl/riscv_compressed_decoder.sv     \
        ../rtl/riscv_controller.sv             \
        ../rtl/riscv_cs_registers.sv           \
