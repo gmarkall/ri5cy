@@ -62,15 +62,16 @@ module riscv_str_ops
   always_ff @(posedge clk)
   begin
     if (enable_i) begin
-      $display("Operand: %x", operand_i);
-      if (operator_i == STR_OP_UPPER)
-        $display("%t: Upper instruction\n", $time);
-      else if (operator_i == STR_OP_LOWER)
-        $display("%t: Lower instruction\n", $time);
-      else if (operator_i == STR_OP_LEET)
-        $display("%t: Leet speak instruction\n", $time);
-      else if (operator_i == STR_OP_ROT13)
-        $display("%t: Rot13 instruction\n", $time);
+      case (operator_i)
+        STR_OP_UPPER:
+          $display("%t: Upper instruction, op %x\n", $time, operand_i);
+        STR_OP_LOWER:
+          $display("%t: Lower instruction, op %x\n", $time, operand_i);
+        STR_OP_LEET:
+          $display("%t: Leet speak instruction, op %x\n", $time, operand_i);
+        STR_OP_ROT13:
+          $display("%t: Rot13 instruction, op %x\n", $time, operand_i);
+      endcase
     end
     else
       $display("%t: Not enabled\n", $time);
