@@ -1,1 +1,0 @@
-./verif/unit/06-packed-shift.S
