@@ -99,6 +99,10 @@ VLIB = $(VDIR)/V$(TOP)__ALL.a
 VSMK = V$(TOP).mk
 VMK  = $(VDIR)/$(VSMK)
 
+
+
+all: $(EXE) unit
+
 # Build the executable
 
 $(EXE): $(VLIB) $(VOBJS) $(OBJS) $(BIN)
@@ -135,13 +139,10 @@ $(VMK): $(VSRC)
 
 .PHONY: unit
 unit:
-	$(RM) $(PROG) $(OBJ) $(BIN)
-	$(LN) -s $(TEST) $(PROG)
-	$(AS) $(PROG) -march=rv32ix -o $(OBJ)
-	$(OBJC) --dump-section .text=$(BIN) $(OBJ)
-
+	$(MAKE) -C verif/unit
 
 .PHONY: clean
 clean:
 	$(RM) -r $(VDIR)
 	$(RM) $(EXE) $(OBJS) $(BIN) $(OBJ)
+	$(MAKE) clean -C verif/unit
