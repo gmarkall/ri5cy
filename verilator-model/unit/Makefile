@@ -1,8 +1,6 @@
 
-OUT_DIR     ?= unit
-
 INPUTS      ?= $(shell find -name "*.S")
-OUTPUTS     ?= $(addprefix $(OUT_DIR)/, $(INPUTS:%.S=%.exe)) $(addprefix $(OUT_DIR)/, $(INPUTS:%.S=%.bin))
+OUTPUTS     ?= $(INPUTS:%.S=%.exe) $(INPUTS:%.S=%.bin)
 
 AS           = riscv32-unknown-elf-as
 LD           = riscv32-unknown-elf-ld
@@ -11,14 +9,13 @@ OBJCOPY      = riscv32-unknown-elf-objcopy
 
 all: $(OUTPUTS)
 
-$(OUT_DIR)/%.o : %.S
-	@mkdir -p $(OUT_DIR)
+%.o : %.S
 	$(AS) -march=rv32ix -o $@ $<
 
-$(OUT_DIR)/%.bin : $(OUT_DIR)/%.exe
+%.bin : %.exe
 	$(OBJCOPY) --dump-section .text=$@ $<
 
-$(OUT_DIR)/%.exe : $(OUT_DIR)/%.o
+%.exe : %.o
 	$(LD) $< -o $@ -T test.ld
 
 .PHONY: clean
