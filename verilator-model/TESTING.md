@@ -120,4 +120,54 @@ Test project /home/graham/projects/sam-leonard/RI5CY-Xcrypto/verilator-model
 Total Test time (real) =   0.39 sec
 ```
 
+The output from the testbench can be seen in `Testing/Temporary/LastTest.log`,
+e.g.:
 
+```
+Start testing: Aug 22 00:45 BST
+----------------------------------------------------------
+1/43 Testing: 00-mvcop
+1/43 Test: 00-mvcop
+Command: "/home/graham/projects/sam-leonard/RI5CY-Xcrypto/verilator-model/testbench" "00-mvcop.bin"
+Directory: /home/graham/projects/sam-leonard/RI5CY-Xcrypto/verilator-model/unit
+"00-mvcop" start time: Aug 22 00:45 BST
+Output:
+----------------------------------------------------------
+About to halt and set traps on exceptions
+About to resume
+Cycling clock to run for a few instructions
+                  56: Illegal instruction (core 0) at PC 0x000000a8:
+Halting
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"00-mvcop" end time: Aug 22 00:45 BST
+"00-mvcop" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/43 Testing: 01-cmov
+2/43 Test: 01-cmov
+Command: "/home/graham/projects/sam-leonard/RI5CY-Xcrypto/verilator-model/testbench" "01-cmov.bin"
+Directory: /home/graham/projects/sam-leonard/RI5CY-Xcrypto/verilator-model/unit
+"01-cmov" start time: Aug 22 00:45 BST
+Output:
+----------------------------------------------------------
+About to halt and set traps on exceptions
+About to resume
+Cycling clock to run for a few instructions
+                  60: Illegal instruction (core 0) at PC 0x000000b0:
+Halting
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"01-cmov" end time: Aug 22 00:45 BST
+"01-cmov" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/43 Testing: 02-li
+3/43 Test: 02-li
+
+...
+```
