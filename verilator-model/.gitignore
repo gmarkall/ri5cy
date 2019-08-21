@@ -6,5 +6,5 @@ testbench.o
 # waves
 *.vcd
 
-program.o
-program.hex
+unit/*.exe
+unit/*.bin

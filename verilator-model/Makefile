@@ -127,10 +127,10 @@ $(VMK): $(VSRC)
 
 .PHONY: unit
 unit:
-	$(MAKE) -C verif/unit
+	$(MAKE) -C unit
 
 .PHONY: clean
 clean:
 	$(RM) -r $(VDIR)
 	$(RM) $(EXE) $(OBJS)
-	$(MAKE) clean -C verif/unit
+	$(MAKE) clean -C unit
