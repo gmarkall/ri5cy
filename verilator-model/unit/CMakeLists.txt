@@ -52,6 +52,21 @@ foreach (_TEST ${TESTS})
 		     ARGS -march=rv32ix -o ${_OBJ} ${_SOURCE}
 		     DEPENDS ${_SOURCE}
 		     COMMENT "Assembling ${_TEST}")
+
+  add_custom_command(OUTPUT ${_PROG}
+                     COMMAND riscv32-unknown-elf-ld
+		     ARGS -T ${CMAKE_CURRENT_SOURCE_DIR}/test.ld -o ${_PROG} ${_OBJ}
+		     DEPENDS ${_OBJ}
+		     COMMENT "Linking ${_TEST}")
+
+  add_custom_command(OUTPUT ${_BIN}
+                     COMMAND riscv32-unknown-elf-objcopy
+		     ARGS --dump-section .text=${_BIN} ${_PROG}
+		     DEPENDS ${_PROG}
+		     COMMENT "Dumping text section for ${_TEST}")
+
+  add_custom_target(${_TEST}-target ALL DEPENDS ${_BIN})
+
   add_test(NAME ${_TEST}
-           COMMAND ../testbench ${_OBJ})
+           COMMAND ../testbench ${_BIN})
 endforeach()

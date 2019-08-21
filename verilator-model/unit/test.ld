@@ -7,6 +7,8 @@ MEMORY
   flash (rxai!w) : ORIGIN = 0x80, LENGTH = 1M
 }
 
+_start = 0x80;
+
 PHDRS
 {
   flash PT_LOAD;
