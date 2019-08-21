@@ -28,6 +28,7 @@
 #include <cstdlib>
 #include <vector>
 
+#include "cxxopts.hpp"
 #include "scarv_cop_common.h"
 
 using std::cout;
@@ -267,15 +268,19 @@ void waitForDebugStall()
 }
 
 // Execution begins at 0x80, so that's where we write our code.
-void loadProgram()
+void loadProgram(string test_name)
 {
   uint32_t addr = 0x80;
 
   const auto &dp_ram = cpu->top->ram_i->dp_ram_i;
 
   // open program.bin as a binary input stream
-  ifstream program_stream ("program.bin", ios::binary);
-  
+  ifstream program_stream (test_name, ios::binary);
+  if (program_stream.fail()) {
+    cerr << "Failed to open " << test_name << endl;
+    exit(EXIT_FAILURE);
+  }
+
   // read the contents of the program into buf
   std::vector<unsigned char> buf(std::istreambuf_iterator<char>(program_stream), {});
 
@@ -289,6 +294,31 @@ int
 main (int    argc,
       char * argv[])
 {
+  string test_name;
+  cxxopts::Options options("testbench", "RI5CY-Xcrypto testbench");
+  options.add_options()
+    ("test-name", "Path to test file to run", cxxopts::value<string>(), "<path>");
+  options.positional_help("[test-name]");
+  options.parse_positional({"test-name"});
+
+
+  try {
+    auto result = options.parse(argc, argv);
+
+    if (result.count("test-name"))
+      test_name = result["test-name"].as<string>();
+    else {
+      cerr << "Error: Test name is required." << endl << endl;
+      cerr << options.help();
+      return EXIT_FAILURE;
+    }
+  }
+  catch (cxxopts::OptionException &e) {
+    cerr << e.what() << endl;
+    cerr << options.help();
+    return EXIT_FAILURE;
+  }
+
   // Instantiate the model
   cpu = new Vtop;
 
@@ -309,7 +339,7 @@ main (int    argc,
   cpu->rstn_i = 1;
 
   // Put a few instructions in memory
-  loadProgram();
+  loadProgram(test_name);
 
   cout << "About to halt and set traps on exceptions" << endl;
 

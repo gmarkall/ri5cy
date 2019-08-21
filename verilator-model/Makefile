@@ -35,12 +35,6 @@ OBJS = testbench.o
 
 EXE = testbench
 
-PROG = program.s
-
-OBJ = program.o
-
-BIN = program.bin
-
 UNIT ?= 00
 
 TEST = $(shell find . -name "$(UNIT)*.S")
@@ -105,14 +99,8 @@ all: $(EXE) unit
 
 # Build the executable
 
-$(EXE): $(VLIB) $(VOBJS) $(OBJS) $(BIN)
+$(EXE): $(VLIB) $(VOBJS) $(OBJS)
 	$(LD) -o $@ $(OBJS) $(VLIB) $(VOBJS)
-
-$(BIN): $(OBJ)
-	$(OBJC) --dump-section .text=$(BIN) $(OBJ)
-
-$(OBJ): $(PROG)
-	$(AS) $(PROG) -march=rv32ix -o $(OBJ)
 
 $(VOBJS): $(VMK)
 	for f in $@; \
@@ -144,5 +132,5 @@ unit:
 .PHONY: clean
 clean:
 	$(RM) -r $(VDIR)
-	$(RM) $(EXE) $(OBJS) $(BIN) $(OBJ)
+	$(RM) $(EXE) $(OBJS)
 	$(MAKE) clean -C verif/unit
