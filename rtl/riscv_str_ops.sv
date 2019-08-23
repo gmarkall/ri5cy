@@ -43,13 +43,14 @@ module riscv_str_ops
   logic leet_ready;
 
   always_comb begin
-    leet_ready = 1'b1;
+    leet_ready = 1'b0;
     leet_NS = leet_CS;
     leet_active = 1'b1;
 
     case (leet_CS)
       IDLE: begin
         leet_active = 1'b0;
+        leet_ready = 1'b1;
         if (operator_i == STR_OP_LEET && enable_i) begin
           leet_ready = 1'b0;
           leet_NS = STEP0;
