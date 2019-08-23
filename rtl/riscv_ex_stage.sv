@@ -261,11 +261,13 @@ module riscv_ex_stage
    riscv_str_ops riscv_str_ops_i
    (
     .clk                 ( clk             ),
+    .rst_n               ( rst_n           ),
     .enable_i            ( str_op_en_i     ),
     .operator_i          ( str_operator_i  ),
     .operand_i           ( str_operand_i   ),
     .result_o            ( str_op_result   ),
-    .ready_o             ( str_op_ready    )
+    .ready_o             ( str_op_ready    ),
+    .ex_ready_i          ( ex_ready_o      )
    );
 
   ////////////////////////////
