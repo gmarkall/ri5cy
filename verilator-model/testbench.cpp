@@ -190,6 +190,7 @@ void loadProgram()
   writeInst(0x0005878b); // Upper:  upper a5, a1
   writeInst(0x00178813); // addi a6, a5, 1
   writeInst(0x0006100b); // Lower
+  writeInst(0x0005a78b); // Leet a5, a1
 
   //uint32_t addr = 0x80;
   uint32_t repeat_factor = 20;
