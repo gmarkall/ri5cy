@@ -176,6 +176,7 @@ module riscv_ex_stage
 
   logic           alu_ready;
   logic           mult_ready;
+  logic           str_op_ready;
   logic           fpu_busy;
 
 
@@ -263,7 +264,8 @@ module riscv_ex_stage
     .enable_i            ( str_op_en_i     ),
     .operator_i          ( str_operator_i  ),
     .operand_i           ( str_operand_i   ),
-    .result_o            ( str_op_result   )
+    .result_o            ( str_op_result   ),
+    .ready_o             ( str_op_ready    )
    );
 
   ////////////////////////////
@@ -502,9 +504,10 @@ module riscv_ex_stage
   // As valid always goes to the right and ready to the left, and we are able
   // to finish branches without going to the WB stage, ex_valid does not
   // depend on ex_ready.
-  assign ex_ready_o = (~apu_stall & alu_ready & mult_ready & lsu_ready_ex_i
-                       & wb_ready_i & ~wb_contention) | (branch_in_ex_i);
-  assign ex_valid_o = (apu_valid | alu_en_i | mult_en_i | csr_access_i | lsu_en_i)
-                       & (alu_ready & mult_ready & lsu_ready_ex_i & wb_ready_i);
+  assign ex_ready_o = (~apu_stall & alu_ready & mult_ready & str_op_ready
+                       & lsu_ready_ex_i & wb_ready_i & ~wb_contention)
+                       | (branch_in_ex_i);
+  assign ex_valid_o = (apu_valid | alu_en_i | mult_en_i | str_op_en_i | csr_access_i | lsu_en_i)
+                       & (alu_ready & mult_ready & str_op_ready & lsu_ready_ex_i & wb_ready_i);
 
 endmodule

@@ -24,14 +24,61 @@ import riscv_defines::*;
 module riscv_str_ops
 (
   input logic                    clk,
+  input logic                    rst_n,
   input logic                    enable_i,
   input logic [STR_OP_WIDTH-1:0] operator_i,
   input logic [31:0]             operand_i,
 
-  output logic [31:0]            result_o
+  output logic [31:0]            result_o,
+  output logic                   ready_o,
+  input logic                    ex_ready_i
+  // Need to implement a ready signal and hook it up, for multicycle ops
 );
 
   logic [31:0] result;
+
+  enum logic [2:0] {IDLE, STEP0, STEP1, STEP2, FINISH} leet_CS, leet_NS;
+
+  logic leet_active;
+  logic leet_ready;
+
+  always_comb begin
+    leet_ready = 1'b1;
+    leet_NS = leet_CS;
+    leet_active = 1'b1;
+
+    case (leet_CS)
+      IDLE: begin
+        leet_active = 1'b0;
+        if (operator_i == STR_OP_LEET && enable_i) begin
+          leet_ready = 1'b0;
+          leet_NS = STEP0;
+        end
+      end
+      STEP0: begin
+        leet_NS = STEP1;
+      end
+      STEP1: begin
+        leet_NS = STEP2;
+      end
+      STEP2: begin
+        leet_NS = FINISH;
+      end
+      FINISH: begin
+        leet_ready = 1'b1;
+        if (ex_ready_i)
+          leet_NS = IDLE;
+      end
+    endcase
+  end
+
+  always_ff @(posedge clk, negedge rst_n)
+  begin
+    if (~rst_n)
+      leet_CS <= IDLE;
+    else
+      leet_CS <= leet_NS;
+  end
 
   always_comb begin
     if (operator_i == STR_OP_UPPER) begin
@@ -58,6 +105,8 @@ module riscv_str_ops
     end
     result_o = enable_i ? result : 32'b0;
   end
+
+  assign ready_o = leet_ready;
 
   always_ff @(posedge clk)
   begin
