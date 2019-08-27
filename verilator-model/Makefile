@@ -80,6 +80,10 @@ VLIB = $(VDIR)/V$(TOP)__ALL.a
 VSMK = V$(TOP).mk
 VMK  = $(VDIR)/$(VSMK)
 
+.PHONY: all
+
+all: $(EXE) examples.bin
+
 # Build the executable
 
 $(EXE): $(VLIB) $(VOBJS) $(OBJS)
@@ -107,6 +111,15 @@ $(VMK): $(VSRC)
 	          -Wno-UNOPTFLAT -Wno-WIDTH -Wno-fatal --top-module top \
 	          --Mdir $(VDIR) --trace -DPULP_FPGA_EMUL -cc \
 	          +incdir+$(VINC) $(VSRC) $(SRC) --exe
+
+examples.bin: examples.elf
+	riscv32-unknown-elf-objcopy --dump-section .text=examples.bin examples.elf
+
+examples.elf: examples.o examples.ld
+	riscv32-unknown-elf-ld -T examples.ld examples.o -o examples.elf
+
+examples.o: examples.s
+	riscv32-unknown-elf-as -march=rv32im examples.s -o examples.o
 
 .PHONY: clean
 clean:

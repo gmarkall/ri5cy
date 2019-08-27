@@ -3,3 +3,8 @@ obj_dir/
 # Test bench build objects
 testbench
 testbench.o
+
+# RISC-V example code
+examples.o
+examples.elf
+examples.bin
