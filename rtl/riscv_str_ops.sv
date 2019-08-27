@@ -123,8 +123,8 @@ module riscv_str_ops
           $display("%t: Rot13 instruction, op %x\n", $time, operand_i);
       endcase
     end
-    else
-      $display("%t: Not enabled\n", $time);
+    //else
+    //  $display("%t: Not enabled\n", $time);
   end
 
 endmodule
