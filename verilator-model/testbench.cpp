@@ -158,23 +158,10 @@ void stepSingle ()
   waitForDebugStall();
 }
 
-// Write some program code into memory:
-//
-// ; Store a word to memory first:
-// li a5, 64
-// li a4, 102
-// sw a4, 0(a5)
-// ; Repeated <repeat_factor> times (20 at present)
-//
-// ; Then do something a bit like _exit(0)
-// li a1, 0
-// li a2, 0
-// li a3, 0
-// li a7, 93
-// ecall
-//
 // Execution begins at 0x80, so that's where we write our code.
 uint32_t addr = 0x80;
+
+// Write an instruction into memory at the current address.
 
 void writeInst(uint32_t inst)
 {
@@ -189,12 +176,20 @@ void writeInst(uint32_t inst)
   addr += 4;
 }
 
+// Load a program from a file and write it to the core's memory.
+
 void loadProgram(std::string fileName)
 {
   cout << "Reading program from " << fileName << endl;
 
   // Read entire file.
   std::ifstream binary(fileName, std::ios::binary);
+
+  if (!binary.is_open()) {
+    cerr << "Error opening " << fileName << endl << endl;
+    exit(EXIT_FAILURE);
+  }
+
   std::vector<unsigned char> buf(std::istreambuf_iterator<char>(binary), {});
 
   // Check there is a multiple of 4 bytes (if not something went wrong and we
@@ -224,33 +219,6 @@ void loadProgram(std::string fileName)
   cout << endl;
 }
 
-/*
-void loadProgram()
-{
-  //writeInst(0x00000513);
-  writeInst(0x746575b7); // a0 = "test"
-  writeInst(0x37458593); //  "
-  writeInst(0x00200613);
-  writeInst(0x00300693);
-  writeInst(0x0005878b); // Upper:  upper a5, a1
-  writeInst(0x00178813); // addi a6, a5, 1
-  writeInst(0x0006100b); // Lower
-  writeInst(0x0005a78b); // Leet a5, a1
-
-  uint32_t repeat_factor = 20;
-  for (size_t i = 0; i < repeat_factor; i++)
-  {
-    writeInst(0x0005800b); // Upper
-    writeInst(0x0006100b); // Lower
-  }
-
-  writeInst(0x00000593);
-  writeInst(0x00000613);
-  writeInst(0x00000693);
-  writeInst(0x05d00893);
-  writeInst(0x00000073);
-}*/
-
 int
 main (int    argc,
       char * argv[])
@@ -274,8 +242,15 @@ main (int    argc,
   clockSpin(5);
   cpu->rstn_i = 1;
 
-  // Put a few instructions in memory
-  loadProgram("examples.bin");
+  // Put instructions in memory from default file (or as specified)
+  if (argc == 2)
+    loadProgram(argv[1]);
+  else if (argc > 2) {
+    cerr << "Usage: ./testbench.cpp [test code]" << endl << endl;
+    exit(EXIT_FAILURE);
+  } else {
+    loadProgram("examples.bin");
+  }
 
   cout << "About to halt and set traps on exceptions" << endl;
 
