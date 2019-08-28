@@ -419,6 +419,35 @@ module riscv_decoder
         end
       end
 
+      ////////////////////////////////////////////////////////////
+      //  ____ _____ ____  ___ _   _  ____    ___  ____  ____   //
+      // / ___|_   _|  _ \|_ _| \ | |/ ___|  / _ \|  _ \/ ___|  //
+      // \___ \ | | | |_) || ||  \| | |  _  | | | | |_) \___ \  //
+      //  ___) || | |  _ < | || |\  | |_| | | |_| |  __/ ___) | //
+      // |____/ |_| |_| \_\___|_| \_|\____|  \___/|_|   |____/  //
+      //                                                        //
+      ////////////////////////////////////////////////////////////
+
+      OPCODE_STR_OPS: begin
+        if (instr_rdata_i[14:12] == 3'b000) begin
+          // Upper case
+          $display("Decoded upper instruction");
+        end
+        else if (instr_rdata_i[14:12] == 3'b001) begin
+          // Lower case
+          $display("Decoded lower instruction");
+        end
+        else if (instr_rdata_i[14:12] == 3'b010) begin
+          // Leet speak
+          $display("Decoded leet instruction");
+        end
+        else if (instr_rdata_i[14:12] == 3'b011) begin
+          // ROT13
+          $display("Decoded rot13 instruction");
+        end
+        else
+          illegal_insn_o = 1'b1;
+      end
 
       //////////////////////////
       //     _    _    _   _  //

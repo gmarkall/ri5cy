@@ -53,6 +53,8 @@ parameter OPCODE_OP_FNMSUB = 7'h4b;
 parameter OPCODE_STORE_FP  = 7'h27;
 parameter OPCODE_LOAD_FP   = 7'h07;
 
+parameter OPCODE_STR_OPS   = 7'h0b;
+
 // those opcodes are now used for PULP custom instructions
 // parameter OPCODE_CUST0     = 7'h0b
 // parameter OPCODE_CUST1     = 7'h2b
