@@ -72,6 +72,10 @@ module riscv_decoder
   input  logic [31:0] instr_rdata_i,           // instruction read from instr memory/cache
   input  logic        illegal_c_insn_i,        // compressed instruction decode failed
 
+  // Str op signals
+  output logic [STR_OP_WIDTH-1:0] str_operator_o,
+  output logic str_op_en_o,
+
   // ALU signals
   output logic        alu_en_o,                // ALU enable
   output logic [ALU_OP_WIDTH-1:0] alu_operator_o, // ALU operation selection
@@ -176,6 +180,9 @@ module riscv_decoder
   begin
     jump_in_id                  = BRANCH_NONE;
     jump_target_mux_sel_o       = JT_JAL;
+
+    str_op_en_o                 = 1'b0;
+    str_operator_o              = STR_OP_UPPER;
 
     alu_en_o                    = 1'b1;
     alu_operator_o              = ALU_SLTU;
@@ -431,19 +438,23 @@ module riscv_decoder
       OPCODE_STR_OPS: begin
         if (instr_rdata_i[14:12] == 3'b000) begin
           // Upper case
-          $display("Decoded upper instruction");
+          str_op_en_o = 1'b1;
+          str_operator_o = STR_OP_UPPER;
         end
         else if (instr_rdata_i[14:12] == 3'b001) begin
           // Lower case
-          $display("Decoded lower instruction");
+          str_op_en_o = 1'b1;
+          str_operator_o = STR_OP_LOWER;
         end
         else if (instr_rdata_i[14:12] == 3'b010) begin
           // Leet speak
-          $display("Decoded leet instruction");
+          str_op_en_o = 1'b1;
+          str_operator_o = STR_OP_LEET;
         end
         else if (instr_rdata_i[14:12] == 3'b011) begin
           // ROT13
-          $display("Decoded rot13 instruction");
+          str_op_en_o = 1'b1;
+          str_operator_o = STR_OP_ROT13;
         end
         else
           illegal_insn_o = 1'b1;

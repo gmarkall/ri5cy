@@ -119,6 +119,10 @@ module riscv_id_stage
     output logic [5:0]  regfile_alu_waddr_ex_o,
     output logic        regfile_alu_we_ex_o,
 
+    // Str ops
+    output logic        str_op_en_ex_o,
+    output logic [STR_OP_WIDTH-1:0] str_operator_ex_o,
+
     // ALU
     output logic        alu_en_ex_o,
     output logic [ALU_OP_WIDTH-1:0] alu_operator_ex_o,
@@ -321,6 +325,10 @@ module riscv_id_stage
   logic [31:0] regfile_data_ra_id;
   logic [31:0] regfile_data_rb_id;
   logic [31:0] regfile_data_rc_id;
+
+  // Str operation control
+  logic         str_op_en;
+  logic [STR_OP_WIDTH-1:0] str_operator;
 
   // ALU Control
   logic        alu_en;
@@ -1028,6 +1036,10 @@ module riscv_id_stage
     .instr_rdata_i                   ( instr                     ),
     .illegal_c_insn_i                ( illegal_c_insn_i          ),
 
+    // Str op signals
+    .str_op_en_o                     ( str_op_en                 ),
+    .str_operator_o                  ( str_operator              ),
+
     // ALU signals
     .alu_en_o                        ( alu_en                    ),
     .alu_operator_o                  ( alu_operator              ),
@@ -1341,6 +1353,9 @@ module riscv_id_stage
       imm_vec_ext_ex_o            <= '0;
       alu_vec_mode_ex_o           <= '0;
 
+      str_op_en_ex_o              <= '0;
+      str_operator_ex_o           <= STR_OP_UPPER;
+
       mult_operator_ex_o          <= '0;
       mult_operand_a_ex_o         <= '0;
       mult_operand_b_ex_o         <= '0;
@@ -1434,6 +1449,11 @@ module riscv_id_stage
             imm_vec_ext_ex_o          <= imm_vec_ext_id;
             alu_vec_mode_ex_o         <= alu_vec_mode;
           end
+        end
+
+        str_op_en_ex_o              <= str_op_en;
+        if (str_op_en) begin
+          str_operator_ex_o         <= str_operator;
         end
 
         mult_en_ex_o                <= mult_en;

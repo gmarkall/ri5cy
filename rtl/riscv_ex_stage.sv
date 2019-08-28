@@ -52,6 +52,10 @@ module riscv_ex_stage
   input  logic        clk,
   input  logic        rst_n,
 
+  // Str op signals from ID stage
+  input logic         str_op_en_i,
+  input logic [STR_OP_WIDTH-1:0] str_operator_i,
+
   // ALU signals from ID stage
   input  logic [ALU_OP_WIDTH-1:0] alu_operator_i,
   input  logic [31:0] alu_operand_a_i,
@@ -240,6 +244,21 @@ module riscv_ex_stage
   assign branch_decision_o = alu_cmp_result;
   assign jump_target_o     = alu_operand_c_i;
 
+  ////////////////////////////////////////////
+  //  ____ _____ ____     ___  ____  ____   //
+  // / ___|_   _|  _ \   / _ \|  _ \/ ___|  //
+  // \___ \ | | | |_) | | | | | |_) \___ \  //
+  //  ___) || | |  _ <  | |_| |  __/ ___) | //
+  // |____/ |_| |_| \_\  \___/|_|   |____/  //
+  //                                        //
+  ////////////////////////////////////////////
+
+   riscv_str_ops riscv_str_ops_i
+   (
+    .clk                 ( clk             ),
+    .enable_i            ( str_op_en_i     ),
+    .operator_i          ( str_operator_i  )
+   );
 
   ////////////////////////////
   //     _    _    _   _    //
