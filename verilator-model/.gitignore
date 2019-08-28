@@ -8,3 +8,6 @@ testbench.o
 examples.o
 examples.elf
 examples.bin
+
+# VCD
+model.vcd
