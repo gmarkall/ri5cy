@@ -440,21 +440,25 @@ module riscv_decoder
           // Upper case
           str_op_en_o = 1'b1;
           str_operator_o = STR_OP_UPPER;
+          regfile_alu_we = 1'b1;
         end
         else if (instr_rdata_i[14:12] == 3'b001) begin
           // Lower case
           str_op_en_o = 1'b1;
           str_operator_o = STR_OP_LOWER;
+          regfile_alu_we = 1'b1;
         end
         else if (instr_rdata_i[14:12] == 3'b010) begin
           // Leet speak
           str_op_en_o = 1'b1;
           str_operator_o = STR_OP_LEET;
+          regfile_alu_we = 1'b1;
         end
         else if (instr_rdata_i[14:12] == 3'b011) begin
           // ROT13
           str_op_en_o = 1'b1;
           str_operator_o = STR_OP_ROT13;
+          regfile_alu_we = 1'b1;
         end
         else
           illegal_insn_o = 1'b1;

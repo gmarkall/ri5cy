@@ -55,6 +55,7 @@ module riscv_ex_stage
   // Str op signals from ID stage
   input logic         str_op_en_i,
   input logic [STR_OP_WIDTH-1:0] str_operator_i,
+  input  logic [31:0] str_operand_i,
 
   // ALU signals from ID stage
   input  logic [ALU_OP_WIDTH-1:0] alu_operator_i,
@@ -162,6 +163,7 @@ module riscv_ex_stage
   input  logic        wb_ready_i  // WB stage ready for new data
 );
 
+  logic [31:0]    str_op_result;
   logic [31:0]    alu_result;
   logic [31:0]    mult_result;
   logic           alu_cmp_result;
@@ -211,6 +213,8 @@ module riscv_ex_stage
       regfile_alu_waddr_fw_o   = regfile_alu_waddr_i;
       if (alu_en_i)
         regfile_alu_wdata_fw_o = alu_result;
+      if (str_op_en_i)
+        regfile_alu_wdata_fw_o = str_op_result;
       if (mult_en_i)
         regfile_alu_wdata_fw_o = mult_result;
       if (csr_access_i)
@@ -257,7 +261,9 @@ module riscv_ex_stage
    (
     .clk                 ( clk             ),
     .enable_i            ( str_op_en_i     ),
-    .operator_i          ( str_operator_i  )
+    .operator_i          ( str_operator_i  ),
+    .operand_i           ( str_operand_i   ),
+    .result_o            ( str_op_result   )
    );
 
   ////////////////////////////

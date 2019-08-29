@@ -173,6 +173,7 @@ module riscv_core
   // Str op control
   logic        str_op_en_ex;
   logic [STR_OP_WIDTH-1:0] str_operator_ex;
+  logic [31:0] str_operand_ex;
 
   // ALU Control
   logic        alu_en_ex;
@@ -601,6 +602,7 @@ module riscv_core
 
     .str_op_en_ex_o               ( str_op_en_ex         ),
     .str_operator_ex_o            ( str_operator_ex      ),
+    .str_operand_ex_o             ( str_operand_ex       ),
 
     .alu_en_ex_o                  ( alu_en_ex            ),
     .alu_operator_ex_o            ( alu_operator_ex      ),
@@ -767,6 +769,7 @@ module riscv_core
     // Str op signals from ID stage
     .str_op_en_i                ( str_op_en_ex                 ),
     .str_operator_i             ( str_operator_ex              ),
+    .str_operand_i              ( str_operand_ex              ),
 
     // Alu signals from ID stage
     .alu_en_i                   ( alu_en_ex                    ),

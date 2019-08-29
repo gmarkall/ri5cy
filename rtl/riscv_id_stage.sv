@@ -105,6 +105,8 @@ module riscv_id_stage
     // Pipeline ID/EX
     output logic [31:0] pc_ex_o,
 
+    output logic [31:0] str_operand_ex_o,
+
     output logic [31:0] alu_operand_a_ex_o,
     output logic [31:0] alu_operand_b_ex_o,
     output logic [31:0] alu_operand_c_ex_o,
@@ -1355,6 +1357,7 @@ module riscv_id_stage
 
       str_op_en_ex_o              <= '0;
       str_operator_ex_o           <= STR_OP_UPPER;
+      str_operand_ex_o            <= '0;
 
       mult_operator_ex_o          <= '0;
       mult_operand_a_ex_o         <= '0;
@@ -1454,6 +1457,7 @@ module riscv_id_stage
         str_op_en_ex_o              <= str_op_en;
         if (str_op_en) begin
           str_operator_ex_o         <= str_operator;
+          str_operand_ex_o          <= alu_operand_a;
         end
 
         mult_en_ex_o                <= mult_en;

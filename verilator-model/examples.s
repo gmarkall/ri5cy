@@ -8,10 +8,10 @@ _start:
         li a5, 5
         li a6, 6
         li a7, 7
-        .insn i 0x0b, 0, x0, a1, 0 # upper x0, a1
-        .insn i 0x0b, 0, a5, a1, 0 # upper a5, a1
-        .insn i 0x0b, 1, a5, a1, 0 # lower a5, a1
-        .insn i 0x0b, 2, a5, a1, 0 # leet a5, a1
+        .insn i 0x0b, 0, a0, a1, 0 # upper x0, a1
+        .insn i 0x0b, 0, a2, a7, 0 # upper a5, a1
+        .insn i 0x0b, 1, a3, a4, 0 # lower a5, a1
+        .insn i 0x0b, 2, a4, a5, 0 # leet a5, a1
         .insn i 0x0b, 3, a5, a1, 0 # rot13 a5, a1
         add t0, a1, a2
         add t1, a3, a4
