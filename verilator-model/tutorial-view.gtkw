@@ -1,14 +1,14 @@
 [*]
 [*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
-[*] Thu Aug 29 10:03:54 2019
+[*] Thu Aug 29 22:08:04 2019
 [*]
 [dumpfile] "\\wsl$\Ubuntu-18.04\home\graham\projects\sam-leonard\my-ri5cy\verilator-model\model.vcd"
-[dumpfile_mtime] "Thu Aug 29 01:55:35 2019"
-[dumpfile_size] 170979
+[dumpfile_mtime] "Thu Aug 29 14:05:23 2019"
+[dumpfile_size] 186245
 [savefile] "\\wsl$\Ubuntu-18.04\home\graham\projects\sam-leonard\my-ri5cy\verilator-model\tutorial-view.gtkw"
-[timestart] 257
-[size] 1081 810
-[pos] 85 85
+[timestart] 282
+[size] 1920 1027
+[pos] -1 -1
 *-4.834311 216 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [treeopen] TOP.top.
@@ -24,7 +24,7 @@
 [sst_width] 298
 [signals_width] 219
 [sst_expanded] 1
-[sst_vpaned_height] 390
+[sst_vpaned_height] 522
 @28
 TOP.top.clk_i
 TOP.top.rstn_i
@@ -72,13 +72,26 @@ TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.operator_i[1:0]
 @22
 TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.operand_i[31:0]
 TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
+@2028
+^4 \\wsl$\Ubuntu-18.04\home\graham\projects\sam-leonard\my-ri5cy\verilator-model\leet_state_filter.txt
+TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.leet_CS[2:0]
+^4 \\wsl$\Ubuntu-18.04\home\graham\projects\sam-leonard\my-ri5cy\verilator-model\leet_state_filter.txt
+TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.leet_NS[2:0]
+@28
+TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.leet_active
+TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.leet_ready
+@23
+TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.leet_intermediate[31:0]
+@22
+TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.ready_o[31:0]
+TOP.top.riscv_core_i.ex_stage_i.riscv_str_ops_i.result_o[31:0]
 @200
 -
 -register file
 @28
 TOP.top.riscv_core_i.id_stage_i.registers_i.riscv_register_file_i.we_b_i
-@2023
-^4 \\wsl$\Ubuntu-18.04\home\graham\projects\sam-leonard\my-ri5cy\verilator-model\register_filter.txt
+@2022
+^5 \\wsl$\Ubuntu-18.04\home\graham\projects\sam-leonard\my-ri5cy\verilator-model\register_filter.txt
 TOP.top.riscv_core_i.id_stage_i.registers_i.riscv_register_file_i.waddr_b[5:0]
 @22
 TOP.top.riscv_core_i.id_stage_i.registers_i.riscv_register_file_i.wdata_b_i[31:0]
