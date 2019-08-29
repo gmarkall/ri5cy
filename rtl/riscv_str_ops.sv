@@ -31,9 +31,34 @@ module riscv_str_ops
   output logic [31:0]            result_o
 );
 
+  logic [31:0] result;
+
   always_comb begin
-    // Dummy for now - output = input
-    result_o = enable_i ? operand_i : 32'b0;
+    result = 32'b0;
+
+    if (operator_i == STR_OP_UPPER) begin
+      if ((operand_i[7:0] > 96) && (operand_i[7:0] < 123))
+        result[7:0] = operand_i[7:0] - 32;
+      else
+        result[7:0] = operand_i[7:0];
+
+      if ((operand_i[15:8] > 96) && (operand_i[15:8] < 123))
+        result[15:8] = operand_i[15:8] - 32;
+      else
+        result[15:8] = operand_i[15:8];
+
+      if ((operand_i[23:16] > 96) && (operand_i[23:16] < 123))
+        result[23:16] = operand_i[23:16] - 32;
+      else
+        result[23:16] = operand_i[23:16];
+
+      if ((operand_i[31:24] > 96) && (operand_i[31:24] < 123))
+        result[31:24] = operand_i[31:24] - 32;
+      else
+        result[31:24] = operand_i[31:24];
+
+    end
+    result_o = enable_i ? result : 32'b0;
   end
 
   always_ff @(posedge clk)

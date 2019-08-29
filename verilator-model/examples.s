@@ -1,14 +1,14 @@
 _start:
         # Load some constants and do some arithmetic
         li a0, 0
-        li a1, 1
+        li a1, 0x74657374
         li a2, 2
         li a3, 3
         li a4, 4
         li a5, 5
         li a6, 6
         li a7, 7
-        .insn i 0x0b, 0, a0, a1, 0 # upper x0, a1
+        .insn i 0x0b, 0, a0, a1, 0 # upper a0, a1
         .insn i 0x0b, 0, a2, a7, 0 # upper a5, a1
         .insn i 0x0b, 1, a3, a4, 0 # lower a5, a1
         .insn i 0x0b, 2, a4, a5, 0 # leet a5, a1
